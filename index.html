@@ -2465,151 +2465,10 @@
   });
 
 
-  // Notification permission check and request
-let notificationEnabled = false;
-let dailyNotificationScheduled = false;
-
-// Check if user has already set notification preference
-window.addEventListener('load', function() {
-  console.log('Page loaded - checking notifications');
-  const notificationPref = localStorage.getItem('notificationEnabled');
-  const hasSeenPrompt = localStorage.getItem('notificationPromptSeen');
-  
-  console.log('Notification permission:', Notification.permission);
-  console.log('Has seen prompt:', hasSeenPrompt);
-  
-  if (!hasSeenPrompt && Notification.permission !== 'granted') {
-    // Show notification modal after 3 seconds
-    console.log('Will show notification modal in 3 seconds');
-    setTimeout(() => {
-      console.log('Showing notification modal now');
-      showNotificationModal();
-    }, 3000);
-  } else if (Notification.permission === 'granted' && notificationPref === 'true') {
-    notificationEnabled = true;
-    scheduleDailyNotification();
-  }
-});
-
-// Show notification badge initially
-window.addEventListener('DOMContentLoaded', function() {
-  const notificationBadge = document.getElementById('notificationBadge');
-  if (notificationBadge && Notification.permission !== 'granted') {
-    notificationBadge.classList.add('show');
-  }
-  updateNotificationBadge();
-});
-
-function showNotificationModal() {
-  const modal = document.getElementById('notificationModal');
-  if (modal) {
-    modal.classList.add('show');
-    localStorage.setItem('notificationPromptSeen', 'true');
-    console.log('Notification modal displayed');
-  } else {
-    console.error('Notification modal not found!');
-  }
-}
-
-function closeNotificationModal() {
-  const modal = document.getElementById('notificationModal');
-  if (modal) {
-    modal.classList.remove('show');
-  }
-}
-
-async function enableNotifications() {
-  try {
-    if (!('Notification' in window)) {
-      showAlert('⚠️', 'Browser Support', 'ඔබගේ browser එක notifications support නොකරයි.');
-      closeNotificationModal();
-      return;
-    }
-
-    if (Notification.permission === 'granted') {
-      notificationEnabled = true;
-      localStorage.setItem('notificationEnabled', 'true');
-      scheduleDailyNotification();
-      showAlert('✅', 'Success!', 'දිනපතා උදේ 4ට notifications ලැබෙනවා! 🎉');
-      closeNotificationModal();
-      
-      // Update badge
-      updateNotificationBadge();
-      
-      // Send test notification
-      sendTestNotification();
-      return;
-    }
-
-    if (Notification.permission !== 'denied') {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        notificationEnabled = true;
-        localStorage.setItem('notificationEnabled', 'true');
-        scheduleDailyNotification();
-        showAlert('✅', 'Success!', 'දිනපතා උදේ 4ට notifications ලැබෙනවා! 🎉');
-        closeNotificationModal();
-        
-        // Update badge
-        updateNotificationBadge();
-        
-        // Send test notification
-        sendTestNotification();
-      } else {
-        showAlert('❌', 'Permission Denied', 'Notification permission එක deny කරා. Browser settings එකෙන් enable කරන්න.');
-        closeNotificationModal();
-      }
-    } else {
-      showAlert('⚠️', 'Permission Blocked', 'Notifications block වෙලා තියෙනවා. Browser settings එකෙන් enable කරන්න.');
-      closeNotificationModal();
-    }
-  } catch (error) {
-    console.error('Notification error:', error);
-    showAlert('❌', 'Error', 'Something went wrong. Please try again.');
-    closeNotificationModal();
-  }
-}
-
-function updateNotificationBadge() {
-  const badge = document.getElementById('notificationBadge');
-  if (badge) {
-    if (Notification.permission === 'granted' && localStorage.getItem('notificationEnabled') === 'true') {
-      badge.textContent = '🔔 Notifications ON';
-      badge.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-    } else {
-      badge.textContent = '🔕 Enable Notifications';
-      badge.style.background = 'linear-gradient(135deg, var(--accent), #2563eb)';
-    }
-  }
-}
-
-function sendTestNotification() {
-  const currentBatch = document.querySelector('.batch-btn.active')?.dataset.batch || '2025';
-  const examDates = {
-    '2025': new Date('2025-11-10'),
-    '2026': new Date('2026-08-03'),
-    '2027': new Date('2027-08-02'),
-    'ol': new Date('2026-12-07')
-  };
-  
-  const targetDate = examDates[currentBatch];
-  const now = new Date();
-  const diff = targetDate - now;
-  const daysLeft = Math.floor(diff / (1000 * 60 * 60 * 24));
-  
-  const notification = new Notification('🎯 A/L Exam Countdown', {
-    body: `විභාගයට තව දින ${daysLeft}ක් ඉතිරියි!\n\n"Success is the sum of small efforts repeated daily." 💪`,
-    icon: 'https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png',
-    badge: 'https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png',
-    tag: 'exam-countdown',
-    requireInteraction: false
-  });
-
-  notification.onclick = function() {
-    window.focus();
-    notification.close();
-  };
-}
+notification.onclick = function() {
+  window.focus();
+  notification.close();
+};
 
 function scheduleDailyNotification() {
   if (!notificationEnabled || dailyNotificationScheduled) return;
@@ -2621,7 +2480,7 @@ function scheduleDailyNotification() {
   setInterval(checkAndSendNotification, 60000);
   
   // Also schedule using a more precise method
-  scheduleNext4AM();
+  scheduleNextNotifications();
 }
 
 function checkAndSendNotification() {
@@ -2629,31 +2488,44 @@ function checkAndSendNotification() {
   const hours = now.getHours();
   const minutes = now.getMinutes();
   
-  // Send notification at 4:00 AM
-  if (hours === 11 && minutes === 0) {
+  // Send notification at 12:00 PM (noon) and 4:00 AM
+  if ((hours === 12 && minutes === 0) || (hours === 4 && minutes === 0)) {
     sendDailyNotification();
   }
 }
 
-function scheduleNext4AM() {
+function scheduleNextNotifications() {
   const now = new Date();
-  const next4AM = new Date();
-  next4AM.setHours(11, 0, 0, 0);
   
-  // If it's already past 4 AM today, schedule for tomorrow
+  // Schedule for both 4:00 AM and 12:00 PM
+  const next4AM = new Date();
+  next4AM.setHours(4, 0, 0, 0);
+  
+  const next12PM = new Date();
+  next12PM.setHours(12, 0, 0, 0);
+  
+  // If both times have passed today, schedule for tomorrow
   if (now > next4AM) {
     next4AM.setDate(next4AM.getDate() + 1);
   }
+  if (now > next12PM) {
+    next12PM.setDate(next12PM.getDate() + 1);
+  }
   
+  // Calculate time until next notification (whichever comes first)
   const timeUntil4AM = next4AM - now;
+  const timeUntil12PM = next12PM - now;
   
-  console.log('Next notification scheduled for:', next4AM);
+  const nextNotificationTime = timeUntil4AM < timeUntil12PM ? next4AM : next12PM;
+  const timeUntilNext = nextNotificationTime - now;
+  
+  console.log('Next notification scheduled for:', nextNotificationTime);
   
   setTimeout(() => {
     sendDailyNotification();
     // Schedule the next one
-    scheduleNext4AM();
-  }, timeUntil4AM);
+    scheduleNextNotifications();
+  }, timeUntilNext);
 }
 
 function sendDailyNotification() {
@@ -2694,8 +2566,13 @@ function sendDailyNotification() {
     'ol': '2025 O/L'
   };
   
+  // Different messages for different times
+  const hours = now.getHours();
+  let greeting = hours === 4 ? 'සුභ උදෑසනක්!' : 'සුභ මධ්‍යාහ්නයක්!';
+  let emoji = hours === 4 ? '🌅' : '☀️';
+  
   const notification = new Notification(`⏰ ${batchNames[currentBatch]} Countdown`, {
-    body: `සුභ උදෑසනක්! 🌅\n\nවිභාගයට තව දින ${daysLeft}ක් ඉතිරියි!\n\n💭 "${randomQuote}"\n\n💪 අද දවසත් ඔබේ best එක දෙන්න!`,
+    body: `${greeting} ${emoji}\n\nවිභාගයට තව දින ${daysLeft}ක් ඉතිරියි!\n\n💭 "${randomQuote}"\n\n💪 ${hours === 4 ? 'අද දවසත්' : 'දවස ඉතිරි කොටස'} ඔබේ best එක දෙන්න!`,
     icon: 'https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png',
     badge: 'https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png',
     tag: 'daily-countdown',
@@ -2717,6 +2594,7 @@ document.querySelectorAll('.batch-btn').forEach(btn => {
     localStorage.setItem('selectedBatch', this.dataset.batch);
   });
 });
+
 </script>
 </body>
 </html>
