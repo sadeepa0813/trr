@@ -56,7 +56,7 @@ const CONFIG = {
     enabled: true,
     showFor2026: true,
     showFor2027: true, // 2027 සඳහා දැන් ඇත
-    showForOL: true, // O/L සඳහා දැන් ඇත
+    showForOL: false, // O/L සඳහා දැන් ඇත
     message: "කාලසටහන තවම නිකුත් කර නොමැත",
     
     // ප්‍රාක්ටිකල් විෂයන්
