@@ -1,60 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="si">
 <head>
-  <meta charset="UTF-8">
-  <title>WhatsApp DP Downloader</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #e9f2f1;
-      text-align: center;
-      margin-top: 100px;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #25D366;
-      color: white;
-      cursor: pointer;
-    }
-    img {
-      margin-top: 20px;
-      width: 200px;
-      border-radius: 50%;
-      border: 3px solid #25D366;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp DP Downloader</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <h2>WhatsApp DP Downloader</h2>
-  <input id="number" type="text" placeholder="Enter Number (+947XXXXXXXX)" />
-  <button onclick="getDP()">Download</button>
-  <div id="result"></div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-whatsapp"></i>
+                <h1>WhatsApp DP Downloader</h1>
+            </div>
+            <p class="subtitle">Download WhatsApp profile pictures easily</p>
+        </div>
 
-  <script>
-    async function getDP() {
-      const number = document.getElementById("number").value.trim();
-      if (!number) return alert("Please enter a number");
+        <div class="main-content">
+            <!-- Number Input Panel -->
+            <div class="panel active" id="numberPanel">
+                <div class="panel-header">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h2>Enter WhatsApp Number</h2>
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <i class="fas fa-flag"></i>
+                        <select id="countryCode">
+                            <option value="+94">🇱🇰 +94</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phoneNumber" placeholder="Enter phone number" maxlength="10">
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="loadProfile()">
+                    <i class="fas fa-search"></i>
+                    Load Profile
+                </button>
+                
+                <div class="disclaimer">
+                    <i class="fas fa-info-circle"></i>
+                    <small>This tool is for educational purposes only</small>
+                </div>
+            </div>
 
-      document.getElementById("result").innerHTML = "Fetching... ⏳";
+            <!-- Profile Panel -->
+            <div class="panel" id="profilePanel">
+                <div class="panel-header">
+                    <i class="fas fa-user-circle"></i>
+                    <h2>Profile Found</h2>
+                </div>
+                
+                <div class="profile-card">
+                    <div class="profile-pic-container">
+                        <img id="profileImage" src="" alt="Profile Picture" class="profile-pic">
+                        <div class="online-indicator"></div>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h3 id="profileName">User Name</h3>
+                        <p id="profileNumber">+94 XXXXXXXX</p>
+                        <p id="profileStatus">Hey there! I'm using WhatsApp</p>
+                    </div>
+                </div>
 
-      const response = await fetch(`/api/getdp?number=${number}`);
-      const data = await response.json();
+                <div class="action-buttons">
+                    <button class="btn-download" onclick="downloadDP()">
+                        <i class="fas fa-download"></i>
+                        Download DP
+                    </button>
+                    <button class="btn-secondary" onclick="backToNumber()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                </div>
+            </div>
 
-      if (data.success) {
-        document.getElementById("result").innerHTML = `
-          <img src="${data.dpUrl}" alt="Profile Picture" />
-          <br>
-          <a href="${data.dpUrl}" download>Download DP</a>
-        `;
-      } else {
-        document.getElementById("result").innerHTML = "❌ Couldn't fetch DP";
-      }
-    }
-  </script>
+            <!-- Loading State -->
+            <div class="panel" id="loadingPanel">
+                <div class="loader">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>Loading Profile...</h3>
+                <p>Please wait while we fetch the profile information</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-bolt"></i>
+                <h4>Fast</h4>
+                <p>Quick profile loading</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h4>Secure</h4>
+                <p>Your data is safe</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-mobile"></i>
+                <h4>Responsive</h4>
+                <p>Works on all devices</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
-</html>
+</html
