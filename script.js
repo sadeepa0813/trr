@@ -1,28 +1,82 @@
-import express from "express";
-import puppeteer from "puppeteer";
+// Panel management
+const numberPanel = document.getElementById('numberPanel');
+const profilePanel = document.getElementById('profilePanel');
+const loadingPanel = document.getElementById('loadingPanel');
 
-const app = express();
+function showPanel(panel) {
+    // Hide all panels
+    numberPanel.classList.remove('active');
+    profilePanel.classList.remove('active');
+    loadingPanel.classList.remove('active');
+    
+    // Show selected panel
+    panel.classList.add('active');
+}
 
-app.get("/api/getdp", async (req, res) => {
-  const { number } = req.query;
-  if (!number) return res.json({ success: false, message: "No number" });
+function showLoading() {
+    showPanel(loadingPanel);
+}
 
-  try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+function loadProfile() {
+    const countryCode = document.getElementById('countryCode').value;
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    
+    // Validation
+    if (!phoneNumber || phoneNumber.length < 9) {
+        alert('Please enter a valid phone number');
+        return;
+    }
+    
+    // Show loading
+    showLoading();
+    
+    // Simulate API call delay
+    setTimeout(() => {
+        // Update profile information
+        document.getElementById('profileNumber').textContent = countryCode + ' ' + phoneNumber;
+        document.getElementById('profileName').textContent = 'User ' + phoneNumber;
+        
+        // For demo purposes, using a placeholder image
+        // In real implementation, you would fetch the actual WhatsApp DP
+        document.getElementById('profileImage').src = 'https://via.placeholder.com/150/25D366/FFFFFF?text=WA';
+        
+        // Show profile panel
+        showPanel(profilePanel);
+    }, 2000);
+}
 
-    await page.goto(`https://wa.me/${number}`);
-    // ⚠️ Need to login to WhatsApp Web or use a session cookie
+function backToNumber() {
+    showPanel(numberPanel);
+}
 
-    // Placeholder (since WhatsApp blocks automated scraping)
-    const dpUrl = "https://i.ibb.co/8zLqT3f/sample-dp.jpg";
+function downloadDP() {
+    const profileImage = document.getElementById('profileImage').src;
+    
+    // Create temporary link for download
+    const link = document.createElement('a');
+    link.href = profileImage;
+    link.download = 'whatsapp-dp.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show success message
+    alert('Profile picture download started!');
+}
 
-    await browser.close();
-    res.json({ success: true, dpUrl });
-  } catch (err) {
-    console.error(err);
-    res.json({ success: false });
-  }
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    showPanel(numberPanel);
+    
+    // Add input validation
+    document.getElementById('phoneNumber').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+// Keyboard navigation
+document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && numberPanel.classList.contains('active')) {
+        loadProfile();
+    }
+});
