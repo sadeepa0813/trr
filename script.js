@@ -481,6 +481,18 @@ function openComplaintWhatsApp() {
     openWhatsApp(CONFIG.WHATSAPP.COMPLAINT, message);
 }
 
+// Admin user identification and display name
+function isAdmin(user) {
+    return user === 'sadeepa@12';
+}
+
+function getDisplayName(user) {
+    if (user === 'sadeepa@12') {
+        return 'sadeepa';
+    }
+    return user;
+}
+
 // User Name Management
 function getUserName() {
     let userName = localStorage.getItem('exam_countdown_username');
@@ -522,7 +534,8 @@ function saveUserName() {
     currentUser = name;
     localStorage.setItem('exam_countdown_username', name);
     showCommentForm();
-    showNotification('👋', `Welcome ${name}!`);
+    const displayName = getDisplayName(name);
+    showNotification('👋', `Welcome ${displayName}!`);
 }
 
 function changeUserName() {
@@ -531,13 +544,9 @@ function changeUserName() {
         const trimmedName = newName.trim();
         localStorage.setItem('exam_countdown_username', trimmedName);
         currentUser = trimmedName;
-        showNotification('✅', `Name changed to: ${trimmedName}`);
+        const displayName = getDisplayName(trimmedName);
+        showNotification('✅', `Name changed to: ${displayName}`);
     }
-}
-
-// Admin user identification
-function isAdmin(user) {
-    return user === 'sadeepa@12';
 }
 
 // Enhanced Backend Functions with Edit/Delete Support
@@ -652,6 +661,7 @@ function renderComments() {
         const isAuthor = comment.author === currentUser;
         const isAdminUser = isAdmin(currentUser);
         const isEdited = comment.lastEdited && comment.lastEdited !== comment.timestamp;
+        const displayName = getDisplayName(comment.author);
         
         // Check if current user is admin for reply permissions
         const canReply = isAdminUser;
@@ -660,7 +670,7 @@ function renderComments() {
         <div class="comment-item" data-comment-id="${comment.id}">
             <div class="comment-header">
                 <span class="comment-author">
-                    ${comment.author}
+                    ${displayName}
                     ${isAdmin(comment.author) ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
                 </span>
                 <span class="comment-time">
@@ -673,18 +683,25 @@ function renderComments() {
             <!-- Display replies if any -->
             ${comment.replies && comment.replies.length > 0 ? `
                 <div class="comment-replies">
-                    ${comment.replies.map(reply => `
+                    <div class="replies-header">
+                        <i class="fas fa-reply"></i>
+                        <span>Replies</span>
+                    </div>
+                    ${comment.replies.map(reply => {
+                        const replyDisplayName = getDisplayName(reply.author);
+                        return `
                         <div class="comment-reply">
                             <div class="reply-header">
                                 <span class="reply-author">
-                                    ${reply.author}
+                                    ${replyDisplayName}
                                     ${isAdmin(reply.author) ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
                                 </span>
                                 <span class="reply-time">${formatTime(reply.timestamp)}</span>
                             </div>
                             <div class="reply-content">${reply.content}</div>
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             ` : ''}
             
@@ -696,7 +713,7 @@ function renderComments() {
                 
                 <!-- Reply button - only for admin -->
                 ${canReply ? `
-                    <button class="comment-action reply-btn" onclick="startReply(${comment.id}, '${comment.author}')">
+                    <button class="comment-action reply-btn" onclick="startReply(${comment.id}, '${displayName}')">
                         <i class="fas fa-reply"></i>
                         <span>Reply</span>
                     </button>
@@ -764,9 +781,14 @@ function startReply(commentId, authorName) {
     
     replyingTo = commentId;
     const commentInput = document.getElementById('commentInput');
-    if (commentInput) {
-        commentInput.placeholder = `Reply to: ${authorName}...`;
+    const submitBtn = document.getElementById('commentSubmit');
+    
+    if (commentInput && submitBtn) {
+        commentInput.placeholder = `Replying to ${authorName}...`;
         commentInput.focus();
+        commentInput.classList.add('comment-input-reply-mode');
+        submitBtn.textContent = 'Post Reply';
+        submitBtn.classList.add('submit-btn-reply-mode');
     }
     showNotification('↩️', `Replying to ${authorName}`);
 }
@@ -804,6 +826,21 @@ function cancelEdit() {
     }
     
     showNotification('❌', 'Edit cancelled');
+}
+
+// Cancel reply
+function cancelReply() {
+    replyingTo = null;
+    const commentInput = document.getElementById('commentInput');
+    const submitBtn = document.getElementById('commentSubmit');
+    
+    if (commentInput && submitBtn) {
+        commentInput.placeholder = 'Write your thoughts about this website here...';
+        commentInput.value = '';
+        commentInput.classList.remove('comment-input-reply-mode');
+        submitBtn.textContent = 'Submit Comment';
+        submitBtn.classList.remove('submit-btn-reply-mode');
+    }
 }
 
 // Delete a comment
@@ -916,6 +953,7 @@ async function submitComment() {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Comment';
         submitBtn.style.background = '';
+        submitBtn.classList.remove('submit-btn-reply-mode');
     }
 }
 
@@ -975,7 +1013,7 @@ async function submitAdminReply(commentId, content) {
     const backendSuccess = await updateBackendAfterReply();
     
     if (backendSuccess) {
-        showNotification('✅', 'Reply submitted successfully! 🎉');
+        showNotification('✅', 'Reply posted successfully! 🎉');
     } else {
         showNotification('⚠️', 'Reply saved locally (Backend issue)');
     }
@@ -1073,15 +1111,6 @@ async function submitNewComment(content) {
         showNotification('✅', 'Comment submitted successfully! 🎉');
     } else {
         showNotification('⚠️', 'Comment saved locally (Backend issue)');
-    }
-}
-
-// Cancel reply
-function cancelReply() {
-    replyingTo = null;
-    const commentInput = document.getElementById('commentInput');
-    if (commentInput) {
-        commentInput.placeholder = 'Write your thoughts about this website here...';
     }
 }
 
