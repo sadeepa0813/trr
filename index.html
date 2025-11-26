@@ -386,12 +386,12 @@
             <div class="comments-header">
                 <h3 class="comments-title">
                     <i class="fas fa-comments"></i>
-                    Website Comments
+            Comments
                 </h3>
                 <span class="comments-count" id="commentsCount">0 Comments</span>
             </div>
             
-            <!-- User Name Input -->
+            <!-- User Name Input Section -->
             <div class="user-name-input-section" id="userNameSection">
                 <div class="user-name-wrapper">
                     <input 
@@ -412,7 +412,7 @@
                 <textarea 
                     class="comment-input" 
                     id="commentInput" 
-                    placeholder="Write your thoughts about this website here..."
+                    placeholder="මේ වෙබ් එක ගැන ඔයාගේ අදහස ලියන්න"
                     maxlength="500"
                 ></textarea>
                 <div class="comment-actions">
@@ -492,40 +492,54 @@
         </div>
     </div>
 
-    <!-- Popup Menu -->
-    <button id="menuBtn" class="floating-menu-btn">
-        <i class="fas fa-bars"></i>
+    <!-- Floating Action Buttons -->
+    <button class="floating-contact-btn" onclick="openContactPopup()">
+        <i class="fas fa-envelope"></i>
     </button>
-    
-    <div id="sideMenu" class="side-menu">
-        <button class="side-menu-close" onclick="closeSideMenu()">×</button>
-        <div class="side-menu-header">
-            <h3>Menu</h3>
-        </div>
-        <div class="side-menu-content">
-            <button class="menu-item" onclick="openContactPopup()">
-                <i class="fas fa-envelope"></i>
-                Contact via Email
-            </button>
-            <button class="menu-item" onclick="changeUserName()">
-                <i class="fas fa-user"></i>
-                Change Username
-            </button>
-            <button class="menu-item" onclick="scrollToComments()">
-                <i class="fas fa-comment"></i>
-                Go to Comments
-            </button>
-            <button class="menu-item" onclick="scrollToTop()">
-                <i class="fas fa-arrow-up"></i>
-                Go to Top
-            </button>
-        </div>
-    </div>
 
     <button class="floating-comment-btn" onclick="scrollToComments()">
         <i class="fas fa-comment"></i>
     </button>
 
+    <button class="scroll-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <button class="user-name-btn" onclick="changeUserName()">
+        <i class="fas fa-user"></i>
+    </button>
+
+    <!-- Side Menu -->
+    <button id="menuBtn" class="menu-toggle-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <div id="sideMenu" class="side-menu">
+        <div class="side-menu-header">
+            <h3 class="side-menu-title">Menu</h3>
+            <button class="side-menu-close" onclick="closeSideMenu()">×</button>
+        </div>
+        <div class="side-menu-content">
+            <button class="menu-item" onclick="openContactPopup(); closeSideMenu();">
+                <i class="fas fa-envelope"></i>
+                <span class="menu-item-text">Contact via Email</span>
+            </button>
+            <button class="menu-item" onclick="changeUserName(); closeSideMenu();">
+                <i class="fas fa-user"></i>
+                <span class="menu-item-text">Change Username</span>
+            </button>
+            <button class="menu-item" onclick="scrollToComments(); closeSideMenu();">
+                <i class="fas fa-comment"></i>
+                <span class="menu-item-text">Go to Comments</span>
+            </button>
+            <button class="menu-item" onclick="scrollToTop(); closeSideMenu();">
+                <i class="fas fa-arrow-up"></i>
+                <span class="menu-item-text">Go to Top</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contact Popup -->
     <div id="contactPopup" class="popup-overlay">
         <div class="contact-modal">
             <button class="close-popup" onclick="closeContactPopup()">×</button>
@@ -559,5 +573,37 @@
     </div>
 
     <script src="script.js"></script>
+
+    <script>
+        // Side Menu functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+
+        function openSideMenu() {
+            sideMenu.classList.add('show');
+        }
+
+        function closeSideMenu() {
+            sideMenu.classList.remove('show');
+        }
+
+        if (menuBtn && sideMenu) {
+            menuBtn.addEventListener('click', openSideMenu);
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!sideMenu.contains(e.target) && !menuBtn.contains(e.target) && sideMenu.classList.contains('show')) {
+                    closeSideMenu();
+                }
+            });
+        }
+
+        // Contact button functionality
+        const contactBtn = document.createElement('button');
+        contactBtn.className = 'floating-contact-btn';
+        contactBtn.innerHTML = '<i class="fas fa-envelope"></i>';
+        contactBtn.onclick = openContactPopup;
+        document.body.appendChild(contactBtn);
+    </script>
 </body>
 </html>
