@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A/L & O/L විභාග කාල ගණනය</title>
+    <title>A/L & O/L Exam Countdown</title>
     <link rel="icon" href="https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -12,38 +12,38 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
-    <!-- තේමා මාරු බොත්තම -->
+    <!-- Theme Toggle Button -->
     <div class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon" id="themeIcon"></i>
     </div>
     
-    <!-- නිවේදන ටෝස්ට් -->
+    <!-- Notification Toast -->
     <div class="notification-toast" id="notificationToast">
         <span class="notification-icon" id="notificationIcon">✅</span>
-        <span class="notification-message" id="notificationMessage">නිවේදන පණිවිඩය</span>
+        <span class="notification-message" id="notificationMessage">Notification message</span>
         <button class="notification-close" id="notificationClose">×</button>
     </div>
     
-    <!-- බැච් මාරු පොප්අප් -->
+    <!-- Batch Switch Popup -->
     <div class="batch-toast" id="batchToast">
         <button class="batch-toast-close" onclick="closeBatchToast()">×</button>
         <div class="batch-toast-header">
             <div class="batch-toast-icon" id="batchToastIcon">
                 <i class="fas fa-graduation-cap"></i>
             </div>
-            <h3 class="batch-toast-title" id="batchToastTitle">බැච් මාරු විය</h3>
+            <h3 class="batch-toast-title" id="batchToastTitle">Batch Switched</h3>
         </div>
         <div class="batch-toast-content">
             <div class="batch-toast-info">
-                <span class="batch-toast-label">වත්මන් බැච්:</span>
+                <span class="batch-toast-label">Current Batch:</span>
                 <span class="batch-toast-value" id="batchToastCurrent">2026 A/L</span>
             </div>
             <div class="batch-toast-info">
-                <span class="batch-toast-label">විභාග දිනය:</span>
-                <span class="batch-toast-value" id="batchToastDate">අගෝස්තු 2026</span>
+                <span class="batch-toast-label">Exam Date:</span>
+                <span class="batch-toast-value" id="batchToastDate">August 2026</span>
             </div>
             <div class="batch-toast-info">
-                <span class="batch-toast-label">ඉතිරි දින:</span>
+                <span class="batch-toast-label">Days Remaining:</span>
                 <span class="batch-toast-value" id="batchToastDays">--</span>
             </div>
         </div>
@@ -55,8 +55,8 @@
                 <div class="logo" id="mainLogo">
                     <img src="https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png" alt="Exam Icon" style="width: 70%; height: 70%; object-fit: contain;">
                 </div>
-                <h1>A/L & O/L විභාග කාල ගණනය</h1>
-                <p class="lead">උසස් පෙළ සහ සාමාන්‍ය පෙළ විභාග කාල ගණනය</p>
+                <h1>A/L & O/L Exam Countdown</h1>
+                <p class="lead">Advanced Level and Ordinary Level Exam Countdown</p>
             </header>
             <div class="batch-selector">
                 <button class="batch-btn disabled" data-batch="2025">📚 2025 A/L</button>
@@ -72,39 +72,39 @@
                 <div class="status-bar">
                     <div class="countdown-status">
                         <div class="status-dot"></div>
-                        නොවැම්බර් 2025 බැච්
+                        November 2025 Batch
                     </div>
                     <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdate2025">සජීවී</span>   
+                        <span id="lastUpdate2025">Live</span>   
                     </div>
                 </div>
                 <div id="countdown2025" class="countdown">
                     <div class="tile" id="daysTile2025">
                         <div class="num" id="days2025">--</div>
-                        <div class="lbl">දින</div>
+                        <div class="lbl">Days</div>
                     </div>
                     <div class="tile" id="hoursTile2025">
                         <div class="num" id="hours2025">--</div>
-                        <div class="lbl">පැය</div>
+                        <div class="lbl">Hours</div>
                     </div>
                     <div class="tile" id="minutesTile2025">
                         <div class="num" id="minutes2025">--</div>
-                        <div class="lbl">මිනිත්තු</div>
+                        <div class="lbl">Minutes</div>
                     </div>
                     <div class="tile" id="secondsTile2025">
                         <div class="num" id="seconds2025">--</div>
-                        <div class="lbl">තත්පර</div>
+                        <div class="lbl">Seconds</div>
                     </div>
                 </div>
                 <div class="quote-section">
-                    <div class="quote-text" id="dailyQuote2025">ප්‍රේරණාත්මක උපදේශය පූරණය වෙමින්...</div>
+                    <div class="quote-text" id="dailyQuote2025">Loading motivational quote...</div>
                     <div class="quote-number" id="quoteNumber2025"></div>
                 </div>
                 <div class="progress-section">
                     <div class="progress-item">
                         <div class="progress-info">
-                            <div class="progress-title">ගිය දින</div>
-                            <div class="progress-subtitle">A/L 2025 සූදානම් වීමෙන් පසු</div>
+                            <div class="progress-title">Days Passed</div>
+                            <div class="progress-subtitle">Since A/L 2025 preparation started</div>
                         </div>
                         <div class="progress-value" id="daysPassed2025">0</div>
                     </div>
@@ -118,39 +118,39 @@
                 <div class="status-bar">
                     <div class="countdown-status countdown-status-2026">
                         <div class="status-dot status-dot-2026"></div>
-                        අගෝස්තු 2026 බැච්
+                        August 2026 Batch
                     </div>
                     <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdate2026">සජීවී</span>
+                        <span id="lastUpdate2026">Live</span>
                     </div>
                 </div>
                 <div id="countdown2026" class="countdown">
                     <div class="tile tile-2026" id="daysTile2026">
                         <div class="num" id="days2026">--</div>
-                        <div class="lbl">දින</div>
+                        <div class="lbl">Days</div>
                     </div>
                     <div class="tile tile-2026" id="hoursTile2026">
                         <div class="num" id="hours2026">--</div>
-                        <div class="lbl">පැය</div>
+                        <div class="lbl">Hours</div>
                     </div>
                     <div class="tile tile-2026" id="minutesTile2026">
                         <div class="num" id="minutes2026">--</div>
-                        <div class="lbl">මිනිත්තු</div>
+                        <div class="lbl">Minutes</div>
                     </div>
                     <div class="tile tile-2026" id="secondsTile2026">
                         <div class="num" id="seconds2026">--</div>
-                        <div class="lbl">තත්පර</div>
+                        <div class="lbl">Seconds</div>
                     </div>
                 </div>
                 <div class="quote-section quote-section-2026">
-                    <div class="quote-text" id="dailyQuote2026">ප්‍රේරණාත්මක උපදේශය පූරණය වෙමින්...</div>
+                    <div class="quote-text" id="dailyQuote2026">Loading motivational quote...</div>
                     <div class="quote-number quote-number-2026" id="quoteNumber2026"></div>
                 </div>
                 <div class="progress-section">
                     <div class="progress-item">
                         <div class="progress-info">
-                            <div class="progress-title">ගිය දින</div>
-                            <div class="progress-subtitle">A/L 2026 සූදානම් වීමෙන් පසු</div>
+                            <div class="progress-title">Days Passed</div>
+                            <div class="progress-subtitle">Since A/L 2026 preparation started</div>
                         </div>
                         <div class="progress-value progress-value-2026" id="daysPassed2026">0</div>
                     </div>
@@ -164,39 +164,39 @@
                 <div class="status-bar">
                     <div class="countdown-status countdown-status-2027">
                         <div class="status-dot status-dot-2027"></div>
-                        අගෝස්තු 2027 බැච්
+                        August 2027 Batch
                     </div>
                     <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdate2027">සජීවී</span>
+                        <span id="lastUpdate2027">Live</span>
                     </div>
                 </div>
                 <div id="countdown2027" class="countdown">
                     <div class="tile tile-2027" id="daysTile2027">
                         <div class="num" id="days2027">--</div>
-                        <div class="lbl">දින</div>
+                        <div class="lbl">Days</div>
                     </div>
                     <div class="tile tile-2027" id="hoursTile2027">
                         <div class="num" id="hours2027">--</div>
-                        <div class="lbl">පැය</div>
+                        <div class="lbl">Hours</div>
                     </div>
                     <div class="tile tile-2027" id="minutesTile2027">
                         <div class="num" id="minutes2027">--</div>
-                        <div class="lbl">මිනිත්තු</div>
+                        <div class="lbl">Minutes</div>
                     </div>
                     <div class="tile tile-2027" id="secondsTile2027">
                         <div class="num" id="seconds2027">--</div>
-                        <div class="lbl">තත්පර</div>
+                        <div class="lbl">Seconds</div>
                     </div>
                 </div>
                 <div class="quote-section quote-section-2027">
-                    <div class="quote-text" id="dailyQuote2027">ප්‍රේරණාත්මක උපදේශය පූරණය වෙමින්...</div>
+                    <div class="quote-text" id="dailyQuote2027">Loading motivational quote...</div>
                     <div class="quote-number quote-number-2027" id="quoteNumber2027"></div>
                 </div>
                 <div class="progress-section">
                     <div class="progress-item">
                         <div class="progress-info">
-                            <div class="progress-title">ගිය දින</div>
-                            <div class="progress-subtitle">A/L 2027 සූදානම් වීමෙන් පසු</div>
+                            <div class="progress-title">Days Passed</div>
+                            <div class="progress-subtitle">Since A/L 2027 preparation started</div>
                         </div>
                         <div class="progress-value progress-value-2027" id="daysPassed2027">0</div>
                     </div>
@@ -210,39 +210,39 @@
                 <div class="status-bar">
                     <div class="countdown-status countdown-status-ol">
                         <div class="status-dot status-dot-ol"></div>
-                        දෙසැම්බර් 2025 O/L බැච්
+                        December 2025 O/L Batch
                     </div>
                     <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdateOL">සජීවී</span>
+                        <span id="lastUpdateOL">Live</span>
                     </div>
                 </div>
                 <div id="countdownOL" class="countdown">
                     <div class="tile tile-ol" id="daysTileOL">
                         <div class="num" id="daysOL">--</div>
-                        <div class="lbl">දින</div>
+                        <div class="lbl">Days</div>
                     </div>
                     <div class="tile tile-ol" id="hoursTileOL">
                         <div class="num" id="hoursOL">--</div>
-                        <div class="lbl">පැය</div>
+                        <div class="lbl">Hours</div>
                     </div>
                     <div class="tile tile-ol" id="minutesTileOL">
                         <div class="num" id="minutesOL">--</div>
-                        <div class="lbl">මිනිත්තු</div>
+                        <div class="lbl">Minutes</div>
                     </div>
                     <div class="tile tile-ol" id="secondsTileOL">
                         <div class="num" id="secondsOL">--</div>
-                        <div class="lbl">තත්පර</div>
+                        <div class="lbl">Seconds</div>
                     </div>
                 </div>
                 <div class="quote-section quote-section-ol">
-                    <div class="quote-text" id="dailyQuoteOL">ප්‍රේරණාත්මක උපදේශය පූරණය වෙමින්...</div>
+                    <div class="quote-text" id="dailyQuoteOL">Loading motivational quote...</div>
                     <div class="quote-number quote-number-ol" id="quoteNumberOL"></div>
                 </div>
                 <div class="progress-section">
                     <div class="progress-item">
                         <div class="progress-info">
-                            <div class="progress-title">ගිය දින</div>
-                            <div class="progress-subtitle">O/L 2025 සූදානම් වීමෙන් පසු</div>
+                            <div class="progress-title">Days Passed</div>
+                            <div class="progress-subtitle">Since O/L 2025 preparation started</div>
                         </div>
                         <div class="progress-value progress-value-ol" id="daysPassedOL">0</div>
                     </div>
@@ -250,160 +250,160 @@
             </div>
         </div>
 
-        <!-- විෂය තේරීම් කාඩ්පත -->
+        <!-- Subject Selection Card -->
         <div id="subjectSelectionCard" class="card">
             <div style="text-align: center; margin-bottom: 16px;">
-                <h3 style="font-size: 18px; color: var(--accent2026); margin: 0 0 10px;">A/L 2026 විෂය තේරීම</h3>
-                <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">කාල සටහනට අවශ්‍ය විෂයන් තෝරාගන්න</p>
+                <h3 style="font-size: 18px; color: var(--accent2026); margin: 0 0 10px;">A/L 2026 Subject Selection</h3>
+                <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Select subjects for your timetable</p>
             </div>
             <div class="timetable-notice">
                 <div class="timetable-notice-icon">📅</div>
-                <h3 class="timetable-notice-title">A/L 2026 කාල සටහන තවම නිකුත් වී නැත</h3>
-                <p class="timetable-notice-text">විභාග දෙපාර්තමේන්තුව විසින් නිල වශයෙන් A/L 2026 විභාග කාල සටහන තවම නිකුත් කර නැත.</p>
-                <p class="timetable-notice-subtext">නිල වශයෙන් නිකුත් වූ විට අපි එය යාවත්කාලීන කරන්නෙමු. කරුණාකර පසුව පරීක්ෂා කරන්න.</p>
+                <h3 class="timetable-notice-title">A/L 2026 Timetable Not Released Yet</h3>
+                <p class="timetable-notice-text">The official A/L 2026 exam timetable has not been released by the Department of Examinations yet.</p>
+                <p class="timetable-notice-subtext">We will update it once officially released. Please check back later.</p>
             </div>
             <div class="subjects-grid">
                 <div class="subject-category">
-                    <h4 class="category-title">ගණිතය</h4>
+                    <h4 class="category-title">Mathematics</h4>
                     <div class="subjects-list">
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="combined-math-1,combined-math-2" data-name="සම්බන්ධ ගණිතය">
+                            <input type="checkbox" value="combined-math-1,combined-math-2" data-name="Combined Mathematics">
                             <span class="checkmark"></span>
-                            <span>සම්බන්ධ ගණිතය</span>
+                            <span>Combined Mathematics</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="higher-mathematics-1,higher-mathematics-2" data-name="උසස් ගණිතය">
+                            <input type="checkbox" value="higher-mathematics-1,higher-mathematics-2" data-name="Higher Mathematics">
                             <span class="checkmark"></span>
-                            <span>උසස් ගණිතය</span>
+                            <span>Higher Mathematics</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="chemistry-1,chemistry-2" data-name="රසායන විද්‍යාව">
+                            <input type="checkbox" value="chemistry-1,chemistry-2" data-name="Chemistry">
                             <span class="checkmark"></span>
-                            <span>රසායන විද්‍යාව</span>
+                            <span>Chemistry</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="ict-1,ict-2" data-name="තොරතුරු තාක්ෂණය">
+                            <input type="checkbox" value="ict-1,ict-2" data-name="Information Technology">
                             <span class="checkmark"></span>
-                            <span>තොරතුරු තාක්ෂණය</span>
+                            <span>Information Technology</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="physics-1,physics-2" data-name="භෞතික විද්‍යාව">
+                            <input type="checkbox" value="physics-1,physics-2" data-name="Physics">
                             <span class="checkmark"></span>
-                            <span>භෞතික විද්‍යාව</span>
+                            <span>Physics</span>
                         </label>
                     </div>
                 </div>
                 <div class="subject-category">
-                    <h4 class="category-title">විද්‍යාව</h4>
+                    <h4 class="category-title">Science</h4>
                     <div class="subjects-list">
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="biology-1,biology-2" data-name="ජීව විද්‍යාව">
+                            <input type="checkbox" value="biology-1,biology-2" data-name="Biology">
                             <span class="checkmark"></span>
-                            <span>ජීව විද්‍යාව</span>
+                            <span>Biology</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="chemistry-1,chemistry-2" data-name="රසායන විද්‍යාව">
+                            <input type="checkbox" value="chemistry-1,chemistry-2" data-name="Chemistry">
                             <span class="checkmark"></span>
-                            <span>රසායන විද්‍යාව</span>
+                            <span>Chemistry</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="physics-1,physics-2" data-name="භෞතික විද්‍යාව">
+                            <input type="checkbox" value="physics-1,physics-2" data-name="Physics">
                             <span class="checkmark"></span>
-                            <span>භෞතික විද්‍යාව</span>
+                            <span>Physics</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="agricultural-science-1,agricultural-science-2" data-name="කෘෂි විද්‍යාව">
+                            <input type="checkbox" value="agricultural-science-1,agricultural-science-2" data-name="Agricultural Science">
                             <span class="checkmark"></span>
-                            <span>කෘෂි විද්‍යාව</span>
+                            <span>Agricultural Science</span>
                         </label>
                     </div>
                 </div>
                 <div class="subject-category">
-                    <h4 class="category-title">කලා</h4>
+                    <h4 class="category-title">Arts</h4>
                     <div class="subjects-list">
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="media-studies-1,media-studies-2" data-name="මාධ්‍ය විද්‍යාව">
+                            <input type="checkbox" value="media-studies-1,media-studies-2" data-name="Media Studies">
                             <span class="checkmark"></span>
-                            <span>මාධ්‍ය විද්‍යාව</span>
+                            <span>Media Studies</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="sinhala-1,sinhala-2" data-name="සිංහල">
+                            <input type="checkbox" value="sinhala-1,sinhala-2" data-name="Sinhala">
                             <span class="checkmark"></span>
-                            <span>සිංහල</span>
+                            <span>Sinhala</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="history-sri-lanka" data-name="ශ්‍රී ලංකා ඉතිහාසය">
+                            <input type="checkbox" value="history-sri-lanka" data-name="Sri Lanka History">
                             <span class="checkmark"></span>
-                            <span>ශ්‍රී ලංකා ඉතිහාසය</span>
+                            <span>Sri Lanka History</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="buddhism-1,buddhism-2" data-name="බුද්ධාගම">
+                            <input type="checkbox" value="buddhism-1,buddhism-2" data-name="Buddhism">
                             <span class="checkmark"></span>
-                            <span>බුද්ධාගම</span>
+                            <span>Buddhism</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="geography-1,geography-2" data-name="භූගෝල විද්‍යාව">
+                            <input type="checkbox" value="geography-1,geography-2" data-name="Geography">
                             <span class="checkmark"></span>
-                            <span>භූගෝල විද්‍යාව</span>
+                            <span>Geography</span>
                         </label>
                     </div>
                 </div>
                 <div class="subject-category">
-                    <h4 class="category-title">වාණිජ්‍යය</h4>
+                    <h4 class="category-title">Commerce</h4>
                     <div class="subjects-list">
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="business-studies-1,business-studies-2" data-name="ව්‍යාපාර අධ්‍යයනය">
+                            <input type="checkbox" value="business-studies-1,business-studies-2" data-name="Business Studies">
                             <span class="checkmark"></span>
-                            <span>ව්‍යාපාර අධ්‍යයනය</span>
+                            <span>Business Studies</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="economics-1,economics-2" data-name="ආර්ථික විද්‍යාව">
+                            <input type="checkbox" value="economics-1,economics-2" data-name="Economics">
                             <span class="checkmark"></span>
-                            <span>ආර්ථික විද්‍යාව</span>
+                            <span>Economics</span>
                         </label>
                         <label class="subject-checkbox">
-                            <input type="checkbox" value="accounting-1,accounting-2" data-name="ගිණුම්කරණය">
+                            <input type="checkbox" value="accounting-1,accounting-2" data-name="Accounting">
                             <span class="checkmark"></span>
-                            <span>ගිණුම්කරණය</span>
+                            <span>Accounting</span>
                         </label>
                     </div>
                 </div>
             </div>
-            <div class="selected-count" id="selectedCount">විෂයන් 0 ක් තෝරා ඇත</div>
+            <div class="selected-count" id="selectedCount">0 subjects selected</div>
             <div class="selection-actions">
-                <button class="submit-btn disabled" id="showExamDatesBtn" onclick="showMyExamDates()">මගේ විභාග දින පෙන්වන්න</button>
-                <button class="clear-btn" onclick="clearSelection()">සියල්ල මකන්න</button>
+                <button class="submit-btn disabled" id="showExamDatesBtn" onclick="showMyExamDates()">Show My Exam Dates</button>
+                <button class="clear-btn" onclick="clearSelection()">Clear All</button>
             </div>
             <div class="complaint-section">
-                <button class="complaint-btn" onclick="openComplaintWhatsApp()">📝 පැමිණිලි වාර්තා කරන්න</button>
-                <p class="complaint-text">ඔබගේ විෂයක් නැතිනම් හෝ වේලාව වෙනස් නම් පැමිණිලි කරන්න</p>
-                <a href="https://doenets.lk/" target="_blank" class="website-link">නිල වෙබ් අඩවියට යන්න</a>
+                <button class="complaint-btn" onclick="openComplaintWhatsApp()">📝 Report Complaint</button>
+                <p class="complaint-text">Report if your subject is missing or time is wrong</p>
+                <a href="https://doenets.lk/" target="_blank" class="website-link">Visit Official Website</a>
             </div>
         </div>
         
-        <!-- අදහස් අංශය -->
+        <!-- Comments Section -->
         <div class="comments-section">
             <div class="comments-header">
                 <h3 class="comments-title">
                     <i class="fas fa-comments"></i>
-                    වෙබ් අදහස්
+                    Website Comments
                 </h3>
-                <span class="comments-count" id="commentsCount">අදහස් 0</span>
+                <span class="comments-count" id="commentsCount">0 Comments</span>
             </div>
             
-            <!-- පරිශීලක නාමය ඇතුළත් කිරීම -->
+            <!-- User Name Input -->
             <div class="user-name-input-section" id="userNameSection">
                 <div class="user-name-wrapper">
                     <input 
                         type="text" 
                         id="userNameInput" 
                         class="user-name-input" 
-                        placeholder="ඔබේ නම ඇතුළත් කරන්න..."
+                        placeholder="Enter your name..."
                         maxlength="30"
                     >
                     <button class="save-name-btn" onclick="saveUserName()">
                         <i class="fas fa-save"></i>
-                        සුරකින්න
+                        Save
                     </button>
                 </div>
             </div>
@@ -412,7 +412,7 @@
                 <textarea 
                     class="comment-input" 
                     id="commentInput" 
-                    placeholder="මෙම වෙබ් අඩවිය ගැන ඔබගේ අදහස් මෙතැනින් ලියන්න..."
+                    placeholder="Write your thoughts about this website here..."
                     maxlength="500"
                 ></textarea>
                 <div class="comment-actions">
@@ -420,14 +420,14 @@
                         <span id="charCount">0</span> / 500
                     </div>
                     <button class="comment-submit" id="commentSubmit" onclick="submitComment()">
-                        අදහස් යොමු කරන්න
+                        Submit Comment
                     </button>
                 </div>
             </div>
             
             <div class="comments-list" id="commentsList">
                 <div class="empty-comments">
-                    තවම කිසිම අදහසක් නැත. පළමු අදහස ලියන්න!
+                    No comments yet. Be the first to comment!
                 </div>
             </div>
         </div>
@@ -438,37 +438,37 @@
                     <svg class="wa-icon" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.150-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.520.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.520-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.040 1.016-1.040 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.200 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.360.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
                     </svg>
-                    <span class="btn-text">💬 වොට්ස්ඇප් බොට් සම්බන්ධ වන්න</span>
+                    <span class="btn-text">💬 Connect with WhatsApp Bot</span>
                 </button>
             </div>
             <div class="description">
-                <span style="font-weight:bold; color:var(--text-primary);">✨📚 A/L විභාග කාල ගණනය බොට් 📚✨</span><br><br>
-                <span style="font-weight:bold; color:var(--text-primary);">⏳ A/L විභාගයට ඔබට තව දවස් කීයක්ද තිබෙන්නේ කියලා real-time දැන ගන්න පුළුවන් smart bot 💡</span><br><br>
-                🚀 <span style="font-weight:bold; color:var(--text-primary);">බොට් ව ස්ටාර්ට් කරන්න:</span> 
+                <span style="font-weight:bold; color:var(--text-primary);">✨📚 A/L Exam Countdown Bot 📚✨</span><br><br>
+                <span style="font-weight:bold; color:var(--text-primary);">⏳ Get real-time countdown to your A/L exams with our smart bot 💡</span><br><br>
+                🚀 <span style="font-weight:bold; color:var(--text-primary);">Start the Bot:</span> 
                 <span style="font-weight:bold; color:var(--error);">Hi 👋</span><br><br>
                 <ul>
-                    <li><span style="font-weight:bold; color:var(--text-primary);">✅ දෛනික කාල ගණන සිහිකැඳවීම් + ප්‍රේරණාත්මක උපදේශ 🔔</span></li>
-                    <li><span style="font-weight:bold; color:var(--text-primary);">📊 අධ්‍යයන ප්‍රගතිය ලුහුඬු කිරීම සහ ජයග්‍රහණ</span></li>
-                    <li><span style="font-weight:bold; color:var(--text-primary);">🔒 ආරක්ෂිත සහ ක්ෂණික – A/L ඉලක්කය keep track කරන්න easy way!</span></li>
+                    <li><span style="font-weight:bold; color:var(--text-primary);">✅ Daily countdown reminders + motivational quotes 🔔</span></li>
+                    <li><span style="font-weight:bold; color:var(--text-primary);">📊 Track study progress and achievements</span></li>
+                    <li><span style="font-weight:bold; color:var(--text-primary);">🔒 Secure and instant - Keep track of your A/L goals the easy way!</span></li>
                 </ul>
                 <br>
-               <h3></h3> 🎯 <strong> හැමදාම උදේට මැසෙජ් එකක් ගන්න පුලුවන් </strong> 🟢<br><h3></h3>
+               <h3></h3> 🎯 <strong> Get a message every morning! </strong> 🟢<br><h3></h3>
             </div>
         </div>
         
         <div id="examDatesPopup" class="popup-overlay">
             <div class="popup-modal">
                 <div class="popup-header">
-                    <h3 class="popup-title">මගේ විභාග කාල සටහන</h3>
+                    <h3 class="popup-title">My Exam Schedule</h3>
                     <button class="close-popup" onclick="closeExamDatesPopup()">×</button>
                 </div>
                 <div class="popup-content">
                     <div id="examDatesList"></div>
                 </div>
                 <div class="popup-footer">
-                    <button class="popup-btn" onclick="copyMySchedule()">කාල සටහන පිටපත් කරන්න</button>
-                    <button class="popup-btn download-btn" onclick="downloadScheduleImage()">📷 රූපය බාගන්න</button>
-                    <button class="popup-btn close-btn" onclick="closeExamDatesPopup()">වසන්න</button>
+                    <button class="popup-btn" onclick="copyMySchedule()">Copy Schedule</button>
+                    <button class="popup-btn download-btn" onclick="downloadScheduleImage()">📷 Download Image</button>
+                    <button class="popup-btn close-btn" onclick="closeExamDatesPopup()">Close</button>
                 </div>
             </div>
         </div>
@@ -476,10 +476,10 @@
         <div id="alertPopup" class="alert-overlay">
             <div class="alert-modal">
                 <div class="alert-icon" id="alertIcon">⏰</div>
-                <h3 class="alert-title" id="alertTitle">පණිවිඩය</h3>
-                <p class="alert-message" id="alertMessage">මෙය පණිවිඩයකි</p>
+                <h3 class="alert-title" id="alertTitle">Message</h3>
+                <p class="alert-message" id="alertMessage">This is a message</p>
                 <div class="alert-actions">
-                    <button class="alert-btn primary" onclick="closeAlert()">හරි</button>
+                    <button class="alert-btn primary" onclick="closeAlert()">OK</button>
                 </div>
             </div>
         </div>
@@ -492,7 +492,7 @@
         </div>
     </div>
 
-    <!-- පොප්අප් මෙනුව -->
+    <!-- Popup Menu -->
     <button id="menuBtn" class="floating-menu-btn">
         <i class="fas fa-bars"></i>
     </button>
@@ -500,24 +500,24 @@
     <div id="sideMenu" class="side-menu">
         <button class="side-menu-close" onclick="closeSideMenu()">×</button>
         <div class="side-menu-header">
-            <h3>මෙනුව</h3>
+            <h3>Menu</h3>
         </div>
         <div class="side-menu-content">
             <button class="menu-item" onclick="openContactPopup()">
                 <i class="fas fa-envelope"></i>
-                විද්‍යුත් තැපැලින් සම්බන්ධ වන්න
+                Contact via Email
             </button>
             <button class="menu-item" onclick="changeUserName()">
                 <i class="fas fa-user"></i>
-                පරිශීලක නාමය වෙනස් කරන්න
+                Change Username
             </button>
             <button class="menu-item" onclick="scrollToComments()">
                 <i class="fas fa-comment"></i>
-                අදහස් වෙත යන්න
+                Go to Comments
             </button>
             <button class="menu-item" onclick="scrollToTop()">
                 <i class="fas fa-arrow-up"></i>
-                ඉහළට යන්න
+                Go to Top
             </button>
         </div>
     </div>
@@ -531,28 +531,28 @@
             <button class="close-popup" onclick="closeContactPopup()">×</button>
             <div class="contact-header">
                 <div class="logo">📧</div>
-                <h2>සම්බන්ධ වන්න</h2>
-                <p>අපිට ඔබගෙන් අහන්න අවශ්‍යයි</p>
+                <h2>Contact Us</h2>
+                <p>We'd love to hear from you</p>
             </div>
             <form id="contactForm">
                 <input type="hidden" name="access_key" value="fd9a9424-521d-4b92-951d-bd41f19f7898">
                 <div class="form-group">
-                    <label for="name">සම්පූර්ණ නම *</label>
-                    <input type="text" id="name" name="name" required placeholder="සදීප">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required placeholder="Sadeepa">
                 </div>
                 <div class="form-group">
-                    <label for="email">විද්‍යුත් තැපැල් ලිපිනය *</label>
+                    <label for="email">Email Address *</label>
                     <input type="email" id="email" name="email" required placeholder="sadeepa@example.com">
                 </div>
                 <div class="form-group">
-                    <label for="subject">විෂය *</label>
-                    <input type="text" id="subject" name="subject" required placeholder="අපට උදව් කරන්න පුළුවන්ද?">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" name="subject" required placeholder="How can we help you?">
                 </div>
                 <div class="form-group">
-                    <label for="message">පණිවිඩය *</label>
-                    <textarea id="message" name="message" required placeholder="තව විස්තර කියන්න..."></textarea>
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" required placeholder="Tell us more details..."></textarea>
                 </div>
-                <button type="submit" class="submit-btn" id="submitBtn">පණිවිඩය යවන්න</button>
+                <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
             </form>
             <div id="statusMessage" class="status-message"></div>
         </div>
