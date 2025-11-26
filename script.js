@@ -66,11 +66,11 @@ function toggleTheme() {
         if (newTheme === 'light') {
             themeIcon.classList.remove('fa-moon');
             themeIcon.classList.add('fa-sun');
-            showNotification('🌞', 'දීප්ත ප්‍රකාරය සක්‍රීය කරන ලදී');
+            showNotification('🌞', 'Light mode activated');
         } else {
             themeIcon.classList.remove('fa-sun');
             themeIcon.classList.add('fa-moon');
-            showNotification('🌙', 'අඳුරු ප්‍රකාරය සක්‍රීය කරන ලදී');
+            showNotification('🌙', 'Dark mode activated');
         }
     }
 }
@@ -170,29 +170,29 @@ function detectDefaultBatch() {
 
 // Quotes
 const quotes = {
-    "01": "ජීවිතය එය මත රඳා පවතිනවාක් මෙන් ඔබේ සිහින හඹා යන්න ✨",
-    "02": "සාර්ථකත්වය කව්රුත් ලබා දෙන්නේ නැත, එබැවින් එය උපයා ගැනීමට උත්සාහ කරන්න! 🌟",
-    "03": "ඔබට හැකි බව විශ්වාස කරන්න 🌟",
-    "04": "ගමන දුෂ්කර විය හැක, නමුත් ඉහළින් ඇති දසුන සුන්දර වනු ඇත 🏔",
-    "05": "ඔබ තුළ තියෙන දේ විශ්වාස කරන්න 💫",
-    "06": "ඔබ දන්නා ප්‍රමාණයට වඩා ඔබට හැකියාව ඇත 🍀⭐️",
-    "07": "අභියෝග ජීවිතය රසවත් කරයි. ඒවා ජය ගැනීම ජීවිතය අර්ථවත් කරයි 🔥💫",
-    "08": "සෑම දිනකම ඔබට දියුණු වීමට අවස්ථාව. උපරිම ප්‍රයෝජන ගන්න 😎💪",
-    "09": "සෑම දුෂ්කරතාවක්ම මැද අවස්ථාවක් තිබේ 🤛",
-    "10": "ජයග්‍රහණයේ උද්යෝගයට වඩා පරාජයේ බිය වැඩි වීමට ඉඩ නොදෙන්න 🫵",
-    "11": "අගෝස්තු 2026 ඔබේ ජයග්‍රහණයේ මාසයයි! සූදානම් වන්න 🎯",
-    "12": "A/L 2026 සිසුවෙකු ලෙස ඔබ අද ඉතිහාසයක් රචනා කරනවා 📚",
-    "13": "කාලය සීමිතයි, නමුත් ඔබේ හැකියාව අසීමිතයි 🚀",
-    "14": "පිටු අධ්‍යයනය නොවෙයි, අර්ථය අවබෝධ කර ගැනීම වැදගත් 🧠",
-    "15": "සෑම විභාගයකම ඔබේ අනාගතයේ දොරක් විවෘත වේ 🚪✨"
+    "01": "Chase your dreams as if your life depends on it ✨",
+    "02": "Success is not given by anyone, so strive to achieve it! 🌟",
+    "03": "Believe in what you can do 🌟",
+    "04": "The journey may be difficult, but the view from the top will be beautiful 🏔",
+    "05": "Believe in what's inside you 💫",
+    "06": "You are capable of more than you know 🍀⭐️",
+    "07": "Challenges make life interesting. Overcoming them makes life meaningful 🔥💫",
+    "08": "Every day is an opportunity to improve. Make the most of it 😎💪",
+    "09": "There is an opportunity in every difficulty 🤛",
+    "10": "Don't let the fear of failure be greater than the desire to succeed 🫵",
+    "11": "August 2026 is your victory month! Get ready 🎯",
+    "12": "As an A/L 2026 student, you are making history today 📚",
+    "13": "Time is limited, but your potential is infinite 🚀",
+    "14": "It's not about memorizing pages, but understanding the meaning 🧠",
+    "15": "Every exam opens a door to your future 🚪✨"
 };
 
 const quotes2026 = {
-    "01": "අනාගතය ඔබට අයත්! මේ මොහොතේ සිට පටන් ගන්න ✨",
-    "02": "2026 A/L ජයග්‍රහණය සඳහා ඔබේ ගමන ආරම්භ කරන්න! 🎯",
-    "03": "සාර්ථකත්වයට කාලය තිබේ, නමුත් කුසලතාව අවශ්‍යයි 🌟",
-    "04": "ඔබේ ඉලක්කය 2026, නමුත් සූදානම් වීම අදම ආරම්භ කරන්න 🚀",
-    "05": "සෑම විභාගයකම ඔබේ අනාගතයේ දොරක් විවෘත වේ 🚪✨"
+    "01": "The future belongs to you! Start from this moment ✨",
+    "02": "Begin your journey to A/L 2026 victory! 🎯",
+    "03": "Success takes time, but skills are required 🌟",
+    "04": "Your target is 2026, but start preparing today 🚀",
+    "05": "Every exam opens a door to your future 🚪✨"
 };
 
 // Batch Switch UI
@@ -218,7 +218,7 @@ function switchBatch(batch) {
         if (batch === '2026') mainLogo.classList.add('logo-2026');
         if (batch === '2027') {
             mainLogo.classList.add('logo-2027');
-            showAlert('🎓', '2027 A/L Batch', '2027 අයගේ දින ගැසට් නිකුත් වෙලා නැත. නිකුත් වූ විට අපි update කරන්නම්.');
+            showAlert('🎓', '2027 A/L Batch', '2027 exam dates have not been gazetted yet. We will update when released.');
         }
         if (batch === 'ol') mainLogo.classList.add('logo-ol');
     }
@@ -244,28 +244,28 @@ function showBatchToast(batch) {
         icon.classList.add('batch-toast-icon-2026');
         title.textContent = '2026 A/L Batch';
         current.textContent = '2026 A/L';
-        date.textContent = 'අගෝස්තු 2026';
+        date.textContent = 'August 2026';
     } else if (batch === '2027') {
         icon.classList.add('batch-toast-icon-2027');
         title.textContent = '2027 A/L Batch';
         current.textContent = '2027 A/L';
-        date.textContent = 'අගෝස්තු 2027';
+        date.textContent = 'August 2027';
     } else if (batch === 'ol') {
         icon.classList.add('batch-toast-icon-ol');
         title.textContent = '2025 O/L Batch';
         current.textContent = '2025 O/L';
-        date.textContent = 'දෙසැම්බර් 2025';
+        date.textContent = 'December 2025';
     } else {
         title.textContent = '2025 A/L Batch';
         current.textContent = '2025 A/L';
-        date.textContent = 'නොවැම්බර් 2025';
+        date.textContent = 'November 2025';
     }
 
     const now = new Date();
     const targetDate = CONFIG.EXAM_DATES[batch];
     const diff = targetDate - now;
     const daysRemaining = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-    days.textContent = `${daysRemaining} දින`;
+    days.textContent = `${daysRemaining} days`;
 
     toast.classList.add('show');
     setTimeout(() => closeBatchToast(), 4000);
@@ -303,7 +303,7 @@ function getDailyQuote() {
     if (quoteNumberElement) {
         const examType = currentBatch === 'ol' ? 'O/L' : 'A/L';
         const year = currentBatch === 'ol' ? '2025' : currentBatch;
-        quoteNumberElement.textContent = `උපදේශ #${quoteKey} • ${examType} ${year} • ${today.toLocaleDateString()}`;
+        quoteNumberElement.textContent = `Quote #${quoteKey} • ${examType} ${year} • ${today.toLocaleDateString()}`;
     }
 }
 
@@ -374,7 +374,7 @@ function updateSelectedCount() {
     const selected = document.querySelectorAll('input[type="checkbox"].subject-checkbox:checked');
     const count = selected.length;
     const el = document.getElementById('selectedCount');
-    if (el) el.textContent = `විෂයන් ${count} ක් තෝරා ඇත`;
+    if (el) el.textContent = `${count} subjects selected`;
     const showBtn = document.getElementById('showExamDatesBtn');
     if (showBtn) {
         if (count >= 3) showBtn.classList.remove('disabled'); else showBtn.classList.add('disabled');
@@ -391,7 +391,7 @@ function updateSelectedCountOL() {
     const selected = document.querySelectorAll('#sectionOL input[type="checkbox"]:checked');
     const count = selected.length;
     const el = document.getElementById('selectedCountOL');
-    if (el) el.textContent = `විෂයන් ${count} ක් තෝරා ඇත`;
+    if (el) el.textContent = `${count} subjects selected`;
     const showBtn = document.getElementById('showExamDatesBtnOL');
     if (showBtn) {
         if (count >= 1) showBtn.classList.remove('disabled'); else showBtn.classList.add('disabled');
@@ -404,7 +404,7 @@ function clearSelectionOL() {
 }
 
 function showMyExamDatesOL() {
-    showAlert('📅', 'O/L විභාග කාල සටහන', 'ඔබගේ පෞද්ගලික O/L විභාග කාල සටහන මෙහි දැක්වෙනු ඇත!');
+    showAlert('📅', 'O/L Exam Schedule', 'Your personal O/L exam schedule will be displayed here!');
 }
 
 // Add event listeners for O/L checkboxes
@@ -416,15 +416,15 @@ document.addEventListener('change', function(e) {
 
 // Show/Copy/Download placeholders
 function showMyExamDates() {
-    showAlert('📅', 'A/L කාල සටහන', 'නිල A/L කාල සටහන තවම නිකුත් කර නැත.');
+    showAlert('📅', 'A/L Schedule', 'Official A/L schedule has not been released yet.');
 }
 
 function copyMySchedule() {
-    showAlert('📅', 'කාල සටහන නොමැත', 'A/L කාල සටහන තවම නිකුත් කර නැත.');
+    showAlert('📅', 'No Schedule', 'A/L schedule has not been released yet.');
 }
 
 async function downloadScheduleImage() {
-    showAlert('📷', 'කාල සටහන නොමැත', 'A/L කාල සටහන තවම නිකුත් කර නැත.');
+    showAlert('📷', 'No Schedule', 'A/L schedule has not been released yet.');
 }
 
 // Popup close handlers
@@ -457,27 +457,27 @@ function openWhatsApp(number, message) {
     window.open(webLink, '_blank');
 }
 
-// WhatsApp බොත්තම සක්‍රීය කිරීම
+// Enable WhatsApp Button
 function enableWhatsAppButton() {
     const waBtn = document.getElementById('waChat');
     if (waBtn) {
         waBtn.classList.remove('disabled');
         const btnText = waBtn.querySelector('.btn-text');
         if (btnText) {
-            btnText.textContent = '💬 WhatsApp Bot සම්බන්ධ වන්න';
+            btnText.textContent = '💬 Connect with WhatsApp Bot';
         }
         waBtn.style.opacity = '1';
         waBtn.style.cursor = 'pointer';
         
         waBtn.addEventListener('click', function() {
-            const message = `Hi 👋\nA/L Exam Countdown Bot වලට ඔබව සාදරයෙන් පිළිගනිමු!\nකරුණාකර "activate" බටන් එක දබන්න.`;
+            const message = `Hi 👋\nWelcome to A/L Exam Countdown Bot!\nPlease click the "activate" button.`;
             openWhatsApp(CONFIG.WHATSAPP.BOT, message);
         });
     }
 }
 
 function openComplaintWhatsApp() {
-    const message = `📝 Subject/Time Complaint Report 📝\n🎯 A/L 2026 Exam Timetable Complaint\n\nකරුණාකර complaint එක දාන්න:\n❗ Missing Subject\n⏰ Wrong Time\n📅 Wrong Date\n🔄 Other Issues\n\n- Team Sadeepa & Shamika`;
+    const message = `📝 Subject/Time Complaint Report 📝\n🎯 A/L 2026 Exam Timetable Complaint\n\nPlease state your complaint:\n❗ Missing Subject\n⏰ Wrong Time\n📅 Wrong Date\n🔄 Other Issues\n\n- Team Sadeepa & Shamika`;
     openWhatsApp(CONFIG.WHATSAPP.COMPLAINT, message);
 }
 
@@ -496,14 +496,14 @@ function getUserName() {
 }
 
 function showUserInputSection() {
-    const userInputSection = document.getElementById('userInputSection');
+    const userInputSection = document.getElementById('userNameSection');
     const commentForm = document.getElementById('commentForm');
     if (userInputSection) userInputSection.style.display = 'block';
     if (commentForm) commentForm.style.display = 'none';
 }
 
 function showCommentForm() {
-    const userInputSection = document.getElementById('userInputSection');
+    const userInputSection = document.getElementById('userNameSection');
     const commentForm = document.getElementById('commentForm');
     if (userInputSection) userInputSection.style.display = 'none';
     if (commentForm) commentForm.style.display = 'block';
@@ -515,26 +515,27 @@ function saveUserName() {
     
     const name = input.value.trim();
     if (!name) {
-        showAlert('⚠️', 'නිවැරදි නොවේ', 'කරුණාකර නාමයක් ඇතුළත් කරන්න');
+        showAlert('⚠️', 'Invalid Input', 'Please enter a name');
         return;
     }
     
     currentUser = name;
     localStorage.setItem('exam_countdown_username', name);
     showCommentForm();
-    showNotification('👋', `සාදරයෙන් පිළිගනිමු ${name}!`);
+    showNotification('👋', `Welcome ${name}!`);
 }
 
 function changeUserName() {
-    const newName = prompt('නව නම ඇතුළත් කරන්න:', currentUser);
+    const newName = prompt('Enter new name:', currentUser);
     if (newName && newName.trim() !== '') {
         const trimmedName = newName.trim();
         localStorage.setItem('exam_countdown_username', trimmedName);
         currentUser = trimmedName;
-        showNotification('✅', `නම වෙනස් කරන ලදී: ${trimmedName}`);
+        showNotification('✅', `Name changed to: ${trimmedName}`);
     }
 }
 
+// Admin user identification
 function isAdmin(user) {
     return user === 'sadeepa@12';
 }
@@ -637,13 +638,13 @@ async function loadCommentsFromBackend() {
     }
 }
 
-// Enhanced Comment System with Edit & Delete
+// Enhanced Comment System with Edit, Delete & Admin Reply
 function renderComments() {
     const commentsList = document.getElementById('commentsList');
     if (!commentsList) return;
 
     if (comments.length === 0) {
-        commentsList.innerHTML = '<div class="empty-comments">තවම කිසිම අදහසක් නැත. පළමු අදහස ලියන්න!</div>';
+        commentsList.innerHTML = '<div class="empty-comments">No comments yet. Be the first to comment!</div>';
         return;
     }
 
@@ -652,36 +653,63 @@ function renderComments() {
         const isAdminUser = isAdmin(currentUser);
         const isEdited = comment.lastEdited && comment.lastEdited !== comment.timestamp;
         
+        // Check if current user is admin for reply permissions
+        const canReply = isAdminUser;
+        
         return `
         <div class="comment-item" data-comment-id="${comment.id}">
             <div class="comment-header">
                 <span class="comment-author">
                     ${comment.author}
-                    ${isAdmin(comment.author) ? '<span class="admin-badge">ADMIN</span>' : ''}
+                    ${isAdmin(comment.author) ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
                 </span>
                 <span class="comment-time">
                     ${formatTime(comment.timestamp)}
-                    ${isEdited ? ' (සංස්කරණය)' : ''}
+                    ${isEdited ? ' (edited)' : ''}
                 </span>
             </div>
             <div class="comment-content">${comment.content}</div>
+            
+            <!-- Display replies if any -->
+            ${comment.replies && comment.replies.length > 0 ? `
+                <div class="comment-replies">
+                    ${comment.replies.map(reply => `
+                        <div class="comment-reply">
+                            <div class="reply-header">
+                                <span class="reply-author">
+                                    ${reply.author}
+                                    ${isAdmin(reply.author) ? '<span class="admin-badge">👑 ADMIN</span>' : ''}
+                                </span>
+                                <span class="reply-time">${formatTime(reply.timestamp)}</span>
+                            </div>
+                            <div class="reply-content">${reply.content}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+            
             <div class="comment-footer">
                 <button class="comment-action ${likedComments.has(comment.id) ? 'liked' : ''}" onclick="toggleLike(${comment.id})">
                     <i class="fas fa-heart"></i>
                     <span>${comment.likes}</span>
                 </button>
-                <button class="comment-action reply-btn" onclick="startReply(${comment.id}, '${comment.author}')">
-                    <i class="fas fa-reply"></i>
-                    <span>පිළිතුරු</span>
-                </button>
+                
+                <!-- Reply button - only for admin -->
+                ${canReply ? `
+                    <button class="comment-action reply-btn" onclick="startReply(${comment.id}, '${comment.author}')">
+                        <i class="fas fa-reply"></i>
+                        <span>Reply</span>
+                    </button>
+                ` : ''}
+                
                 ${(isAuthor || isAdminUser) ? `
                     <button class="comment-action edit-btn" onclick="startEdit(${comment.id})">
                         <i class="fas fa-edit"></i>
-                        <span>සංස්කරණය</span>
+                        <span>Edit</span>
                     </button>
                     <button class="comment-action delete-btn" onclick="deleteComment(${comment.id})">
                         <i class="fas fa-trash"></i>
-                        <span>මකන්න</span>
+                        <span>Delete</span>
                     </button>
                 ` : ''}
             </div>
@@ -698,16 +726,16 @@ function formatTime(timestamp) {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'දැන්';
-    if (minutes < 60) return `${minutes} මිනිත්තුවකට පෙර`;
-    if (hours < 24) return `${hours} පැයකට පෙර`;
-    return `${days} දිනකට පෙර`;
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes} minutes ago`;
+    if (hours < 24) return `${hours} hours ago`;
+    return `${days} days ago`;
 }
 
 function updateCommentsCount() {
     const countElement = document.getElementById('commentsCount');
     if (countElement) {
-        countElement.textContent = `අදහස් ${comments.length}`;
+        countElement.textContent = `${comments.length} Comments`;
     }
 }
 
@@ -727,15 +755,20 @@ function toggleLike(commentId) {
     localStorage.setItem('exam_countdown_comments', JSON.stringify(comments));
 }
 
-// Start replying to a comment
+// Start replying to a comment (admin only)
 function startReply(commentId, authorName) {
+    if (!isAdmin(currentUser)) {
+        showNotification('⚠️', 'You are not authorized to reply');
+        return;
+    }
+    
     replyingTo = commentId;
     const commentInput = document.getElementById('commentInput');
     if (commentInput) {
-        commentInput.placeholder = `${authorName} වෙත පිළිතුරු දෙමින්...`;
+        commentInput.placeholder = `Reply to: ${authorName}...`;
         commentInput.focus();
     }
-    showNotification('↩️', `${authorName} වෙත පිළිතුරු දෙමින්`);
+    showNotification('↩️', `Replying to ${authorName}`);
 }
 
 // Start editing a comment
@@ -750,11 +783,11 @@ function startEdit(commentId) {
     if (commentInput && submitBtn) {
         commentInput.value = comment.content;
         commentInput.focus();
-        submitBtn.textContent = 'යාවත්කාලීන කරන්න';
+        submitBtn.textContent = 'Update';
         submitBtn.style.background = 'var(--warning)';
     }
     
-    showNotification('✏️', 'ඔබගේ අදහස සංස්කරණය කරමින්...');
+    showNotification('✏️', 'Editing your comment...');
 }
 
 // Cancel edit mode
@@ -765,17 +798,17 @@ function cancelEdit() {
     
     if (commentInput && submitBtn) {
         commentInput.value = '';
-        commentInput.placeholder = 'මෙම වෙබ් අඩවිය ගැන ඔබගේ අදහස් මෙතැනින් ලියන්න...';
-        submitBtn.textContent = 'අදහස් යොමු කරන්න';
+        commentInput.placeholder = 'Write your thoughts about this website here...';
+        submitBtn.textContent = 'Submit Comment';
         submitBtn.style.background = '';
     }
     
-    showNotification('❌', 'සංස්කරණය අවලංගු කරන ලදී');
+    showNotification('❌', 'Edit cancelled');
 }
 
 // Delete a comment
 async function deleteComment(commentId) {
-    if (!confirm('ඔබට විශ්වාසද? මෙම අදහස මකන්න?')) {
+    if (!confirm('Are you sure? Delete this comment?')) {
         return;
     }
 
@@ -796,9 +829,9 @@ async function deleteComment(commentId) {
     const backendSuccess = await updateBackendAfterDelete();
     
     if (backendSuccess) {
-        showNotification('✅', 'අදහස සාර්ථකව මකන ලදී!');
+        showNotification('✅', 'Comment deleted successfully!');
     } else {
-        showNotification('⚠️', 'අදහස දේශීයව මකන ලදී (Backend issue)');
+        showNotification('⚠️', 'Comment deleted locally (Backend issue)');
     }
 }
 
@@ -838,7 +871,7 @@ async function updateBackendAfterDelete() {
     }
 }
 
-// Enhanced submit function with edit support
+// Enhanced submit function with edit and reply support
 async function submitComment() {
     const input = document.getElementById('commentInput');
     const submitBtn = document.getElementById('commentSubmit');
@@ -847,25 +880,25 @@ async function submitComment() {
 
     const content = input.value.trim();
     if (!content) {
-        showAlert('⚠️', 'හිස් අදහස', 'කරුණාකර අදහසක් ලියන්න!');
+        showAlert('⚠️', 'Empty Comment', 'Please write a comment!');
         return;
     }
 
     if (content.length > 500) {
-        showAlert('⚠️', 'අදහස දිගුවේ', 'අදහස 500 අකුරුවලින් අඩු විය යුතුය!');
+        showAlert('⚠️', 'Comment Too Long', 'Comment must be less than 500 characters!');
         return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="loading-spinner"></span> යොමු කරමින්...';
+    submitBtn.innerHTML = '<span class="loading-spinner"></span> Submitting...';
 
     try {
         if (editingComment) {
             // Edit existing comment
             await editExistingComment(editingComment, content);
-        } else if (replyingTo) {
-            // Reply to comment (you can add this later)
-            showNotification('ℹ️', 'පිළිතුරු විශේෂතා ඉදිරියට එයි!');
+        } else if (replyingTo && isAdmin(currentUser)) {
+            // Admin reply to comment
+            await submitAdminReply(replyingTo, content);
         } else {
             // New comment
             await submitNewComment(content);
@@ -878,10 +911,10 @@ async function submitComment() {
         
     } catch (error) {
         console.error('Submit comment error:', error);
-        showNotification('❌', 'අදහස යොමු කිරීමේ දෝෂය');
+        showNotification('❌', 'Error submitting comment');
     } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'අදහස් යොමු කරන්න';
+        submitBtn.textContent = 'Submit Comment';
         submitBtn.style.background = '';
     }
 }
@@ -905,9 +938,46 @@ async function editExistingComment(commentId, newContent) {
     const backendSuccess = await updateBackendAfterEdit();
     
     if (backendSuccess) {
-        showNotification('✅', 'අදහස සාර්ථකව යාවත්කාලීන කරන ලදී!');
+        showNotification('✅', 'Comment updated successfully!');
     } else {
-        showNotification('⚠️', 'අදහස දේශීයව යාවත්කාලීන කරන ලදී (Backend issue)');
+        showNotification('⚠️', 'Comment updated locally (Backend issue)');
+    }
+}
+
+// Submit admin reply
+async function submitAdminReply(commentId, content) {
+    const comment = comments.find(c => c.id === commentId);
+    if (!comment) return;
+
+    const reply = {
+        id: Date.now(),
+        author: currentUser,
+        content: content,
+        timestamp: new Date().toISOString(),
+        isAdminReply: true
+    };
+
+    // Initialize replies array if it doesn't exist
+    if (!comment.replies) {
+        comment.replies = [];
+    }
+
+    // Add reply
+    comment.replies.push(reply);
+    
+    // Update local storage
+    localStorage.setItem('exam_countdown_comments', JSON.stringify(comments));
+    
+    // Update display
+    renderComments();
+    
+    // Update backend
+    const backendSuccess = await updateBackendAfterReply();
+    
+    if (backendSuccess) {
+        showNotification('✅', 'Reply submitted successfully! 🎉');
+    } else {
+        showNotification('⚠️', 'Reply saved locally (Backend issue)');
     }
 }
 
@@ -946,6 +1016,41 @@ async function updateBackendAfterEdit() {
     }
 }
 
+// Update backend after reply
+async function updateBackendAfterReply() {
+    try {
+        const getResponse = await fetch(BACKEND_GET_URL, {
+            headers: {
+                'X-Master-Key': CONFIG.BACKEND.API_KEY,
+                'X-Bin-Meta': false
+            }
+        });
+        
+        if (!getResponse.ok) return false;
+        
+        const existingData = await getResponse.json();
+        
+        const updateResponse = await fetch(BACKEND_PUT_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': CONFIG.BACKEND.API_KEY
+            },
+            body: JSON.stringify({
+                ...existingData,
+                comments: comments,
+                lastUpdated: new Date().toISOString()
+            })
+        });
+        
+        return updateResponse.ok;
+        
+    } catch (error) {
+        console.error('Backend reply update error:', error);
+        return false;
+    }
+}
+
 // Submit new comment
 async function submitNewComment(content) {
     const newComment = {
@@ -965,9 +1070,9 @@ async function submitNewComment(content) {
     const backendSuccess = await updateBackendWithComment(newComment);
     
     if (backendSuccess) {
-        showNotification('✅', 'අදහස සාර්ථකව යොමු කළා! 🎉');
+        showNotification('✅', 'Comment submitted successfully! 🎉');
     } else {
-        showNotification('⚠️', 'අදහස සුරකින ලදී! (Backend issue)');
+        showNotification('⚠️', 'Comment saved locally (Backend issue)');
     }
 }
 
@@ -976,7 +1081,7 @@ function cancelReply() {
     replyingTo = null;
     const commentInput = document.getElementById('commentInput');
     if (commentInput) {
-        commentInput.placeholder = 'මෙම වෙබ් අඩවිය ගැන ඔබගේ අදහස් මෙතැනින් ලියන්න...';
+        commentInput.placeholder = 'Write your thoughts about this website here...';
     }
 }
 
@@ -1109,16 +1214,16 @@ async function testBackendConnection() {
         if (response.ok) {
             const data = await response.json();
             console.log('✅ Backend connection successful!', data);
-            showNotification('✅', 'Backend සම්බන්ධතාව සාර්ථකයි!');
+            showNotification('✅', 'Backend connection successful!');
             return true;
         } else {
             console.log('❌ Backend connection failed:', response.status);
-            showNotification('⚠️', 'Backend සම්බන්ධතාව අසාර්ථකයි');
+            showNotification('⚠️', 'Backend connection failed');
             return false;
         }
     } catch (error) {
         console.error('❌ Backend test error:', error);
-        showNotification('❌', 'Backend සම්බන්ධතා දෝෂය');
+        showNotification('❌', 'Backend connection error');
         return false;
     }
 }
@@ -1153,4 +1258,4 @@ setInterval(getDailyQuote, 3600000);
 // Initialize on load
 document.addEventListener('DOMContentLoaded', initializeApp);
 
-console.log('🚀 A/L & O/L Exam Countdown - ENHANCED WITH EDIT/DELETE');
+console.log('🚀 A/L & O/L Exam Countdown - ENHANCED WITH EDIT/DELETE & ADMIN REPLY');
