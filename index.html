@@ -1,609 +1,973 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A/L & O/L Exam Countdown</title>
-    <link rel="icon" href="https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png" type="image/png">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>M&K Promotions - Premium WhatsApp Advertising</title>
+    <!-- Supabase JS Client -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- CDNs -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Sinhala:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        sinhala: ['Noto Sans Sinhala', 'serif'],
+                    },
+                    colors: {
+                        primary: '#6366f1', // Indigo
+                        secondary: '#8b5cf6', // Violet
+                        accent: '#ec4899', // Pink
+                        dark: '#020617', // Slate 950
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Ambient Background */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.3;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Neon Text */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Toggle Button */
+        .toggle-btn {
+            @apply rounded-full w-full md:w-auto px-6 md:px-8 py-3 md:py-4 font-bold text-base md:text-lg bg-slate-800/40 border border-white/10 backdrop-blur-md text-gray-400 flex items-center justify-center gap-3 group transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-1 hover:text-white cursor-pointer;
+        }
+        
+        .toggle-btn.active {
+            @apply bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-[0_0_25px_rgba(139,92,246,0.5)] border-transparent scale-105;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+
+        /* Helpers */
+        .sinhala { display: none; }
+        .lang-active { display: block; }
+        .package-section { display: none; }
+        .package-section.active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
+    </style>
 </head>
-<body>
-    <!-- Theme Toggle Button -->
-    <div class="theme-toggle" id="themeToggle">
-        <i class="fas fa-moon" id="themeIcon"></i>
-    </div>
-    
-    <!-- Notification Toast -->
-    <div class="notification-toast" id="notificationToast">
-        <span class="notification-icon" id="notificationIcon">✅</span>
-        <span class="notification-message" id="notificationMessage">Notification message</span>
-        <button class="notification-close" id="notificationClose">×</button>
-    </div>
-    
-    <!-- Batch Switch Popup -->
-    <div class="batch-toast" id="batchToast">
-        <button class="batch-toast-close" onclick="closeBatchToast()">×</button>
-        <div class="batch-toast-header">
-            <div class="batch-toast-icon" id="batchToastIcon">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <h3 class="batch-toast-title" id="batchToastTitle">Batch Switched</h3>
-        </div>
-        <div class="batch-toast-content">
-            <div class="batch-toast-info">
-                <span class="batch-toast-label">Current Batch:</span>
-                <span class="batch-toast-value" id="batchToastCurrent">2026 A/L</span>
-            </div>
-            <div class="batch-toast-info">
-                <span class="batch-toast-label">Exam Date:</span>
-                <span class="batch-toast-value" id="batchToastDate">August 2026</span>
-            </div>
-            <div class="batch-toast-info">
-                <span class="batch-toast-label">Days Remaining:</span>
-                <span class="batch-toast-value" id="batchToastDays">--</span>
-            </div>
-        </div>
-    </div>
+<body oncontextmenu="return false;" onkeydown="if(event.ctrlKey && event.keyCode == 85) return false;">
 
-    <div class="wrap">
-        <div class="card">
-            <header>
-                <div class="logo" id="mainLogo">
-                    <img src="https://i.ibb.co/jZJK1jqK/exam-bot-dp2.png" alt="Exam Icon" style="width: 70%; height: 70%; object-fit: contain;">
-                </div>
-                <h1>A/L & O/L Exam Countdown</h1>
-                <p class="lead">Advanced Level and Ordinary Level Exam Countdown</p>
-            </header>
-            <div class="batch-selector">
-                <button class="batch-btn disabled" data-batch="2025">📚 2025 A/L</button>
-                <button class="batch-btn batch-btn-2026 active" data-batch="2026">🎯 2026 A/L</button>
-                <button class="batch-btn batch-btn-2027" data-batch="2027">🎓 2027 A/L</button>
-                <button class="batch-btn batch-btn-ol" data-batch="ol">📖 2025 O/L</button>
-            </div>
-        </div>
+    <!-- Ambient Orbs -->
+    <div class="bg-orb w-64 h-64 md:w-96 md:h-96 bg-indigo-600 top-[-10%] left-[-10%]"></div>
+    <div class="bg-orb w-64 h-64 md:w-[500px] md:h-[500px] bg-purple-600 bottom-[-10%] right-[-10%] animate-pulse-slow"></div>
 
-        <!-- 2025 A/L Section -->
-        <div id="section2025" class="countdown-section hidden">
-            <div class="card">
-                <div class="status-bar">
-                    <div class="countdown-status">
-                        <div class="status-dot"></div>
-                        November 2025 Batch
-                    </div>
-                    <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdate2025">Live</span>   
-                    </div>
+    <!-- Sticky Navbar -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 glass-panel border-b border-white/5">
+        <div class="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-tr from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/20">
+                    <i class="fab fa-whatsapp text-lg md:text-2xl text-white"></i>
                 </div>
-                <div id="countdown2025" class="countdown">
-                    <div class="tile" id="daysTile2025">
-                        <div class="num" id="days2025">--</div>
-                        <div class="lbl">Days</div>
-                    </div>
-                    <div class="tile" id="hoursTile2025">
-                        <div class="num" id="hours2025">--</div>
-                        <div class="lbl">Hours</div>
-                    </div>
-                    <div class="tile" id="minutesTile2025">
-                        <div class="num" id="minutes2025">--</div>
-                        <div class="lbl">Minutes</div>
-                    </div>
-                    <div class="tile" id="secondsTile2025">
-                        <div class="num" id="seconds2025">--</div>
-                        <div class="lbl">Seconds</div>
-                    </div>
-                </div>
-                <div class="quote-section">
-                    <div class="quote-text" id="dailyQuote2025">Loading motivational quote...</div>
-                    <div class="quote-number" id="quoteNumber2025"></div>
-                </div>
-                <div class="progress-section">
-                    <div class="progress-item">
-                        <div class="progress-info">
-                            <div class="progress-title">Days Passed</div>
-                            <div class="progress-subtitle">Since A/L 2025 preparation started</div>
-                        </div>
-                        <div class="progress-value" id="daysPassed2025">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2026 A/L Section -->
-        <div id="section2026" class="countdown-section">
-            <div class="card card-2026">
-                <div class="status-bar">
-                    <div class="countdown-status countdown-status-2026">
-                        <div class="status-dot status-dot-2026"></div>
-                        August 2026 Batch
-                    </div>
-                    <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdate2026">Live</span>
-                    </div>
-                </div>
-                <div id="countdown2026" class="countdown">
-                    <div class="tile tile-2026" id="daysTile2026">
-                        <div class="num" id="days2026">--</div>
-                        <div class="lbl">Days</div>
-                    </div>
-                    <div class="tile tile-2026" id="hoursTile2026">
-                        <div class="num" id="hours2026">--</div>
-                        <div class="lbl">Hours</div>
-                    </div>
-                    <div class="tile tile-2026" id="minutesTile2026">
-                        <div class="num" id="minutes2026">--</div>
-                        <div class="lbl">Minutes</div>
-                    </div>
-                    <div class="tile tile-2026" id="secondsTile2026">
-                        <div class="num" id="seconds2026">--</div>
-                        <div class="lbl">Seconds</div>
-                    </div>
-                </div>
-                <div class="quote-section quote-section-2026">
-                    <div class="quote-text" id="dailyQuote2026">Loading motivational quote...</div>
-                    <div class="quote-number quote-number-2026" id="quoteNumber2026"></div>
-                </div>
-                <div class="progress-section">
-                    <div class="progress-item">
-                        <div class="progress-info">
-                            <div class="progress-title">Days Passed</div>
-                            <div class="progress-subtitle">Since A/L 2026 preparation started</div>
-                        </div>
-                        <div class="progress-value progress-value-2026" id="daysPassed2026">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2027 A/L Section -->
-        <div id="section2027" class="countdown-section hidden">
-            <div class="card card-2027">
-                <div class="status-bar">
-                    <div class="countdown-status countdown-status-2027">
-                        <div class="status-dot status-dot-2027"></div>
-                        August 2027 Batch
-                    </div>
-                    <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdate2027">Live</span>
-                    </div>
-                </div>
-                <div id="countdown2027" class="countdown">
-                    <div class="tile tile-2027" id="daysTile2027">
-                        <div class="num" id="days2027">--</div>
-                        <div class="lbl">Days</div>
-                    </div>
-                    <div class="tile tile-2027" id="hoursTile2027">
-                        <div class="num" id="hours2027">--</div>
-                        <div class="lbl">Hours</div>
-                    </div>
-                    <div class="tile tile-2027" id="minutesTile2027">
-                        <div class="num" id="minutes2027">--</div>
-                        <div class="lbl">Minutes</div>
-                    </div>
-                    <div class="tile tile-2027" id="secondsTile2027">
-                        <div class="num" id="seconds2027">--</div>
-                        <div class="lbl">Seconds</div>
-                    </div>
-                </div>
-                <div class="quote-section quote-section-2027">
-                    <div class="quote-text" id="dailyQuote2027">Loading motivational quote...</div>
-                    <div class="quote-number quote-number-2027" id="quoteNumber2027"></div>
-                </div>
-                <div class="progress-section">
-                    <div class="progress-item">
-                        <div class="progress-info">
-                            <div class="progress-title">Days Passed</div>
-                            <div class="progress-subtitle">Since A/L 2027 preparation started</div>
-                        </div>
-                        <div class="progress-value progress-value-2027" id="daysPassed2027">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- O/L Section -->
-        <div id="sectionOL" class="countdown-section hidden">
-            <div class="card card-ol">
-                <div class="status-bar">
-                    <div class="countdown-status countdown-status-ol">
-                        <div class="status-dot status-dot-ol"></div>
-                        December 2025 O/L Batch
-                    </div>
-                    <div style="font-size:10px;color:var(--text-secondary);">
-                        <span id="lastUpdateOL">Live</span>
-                    </div>
-                </div>
-                <div id="countdownOL" class="countdown">
-                    <div class="tile tile-ol" id="daysTileOL">
-                        <div class="num" id="daysOL">--</div>
-                        <div class="lbl">Days</div>
-                    </div>
-                    <div class="tile tile-ol" id="hoursTileOL">
-                        <div class="num" id="hoursOL">--</div>
-                        <div class="lbl">Hours</div>
-                    </div>
-                    <div class="tile tile-ol" id="minutesTileOL">
-                        <div class="num" id="minutesOL">--</div>
-                        <div class="lbl">Minutes</div>
-                    </div>
-                    <div class="tile tile-ol" id="secondsTileOL">
-                        <div class="num" id="secondsOL">--</div>
-                        <div class="lbl">Seconds</div>
-                    </div>
-                </div>
-                <div class="quote-section quote-section-ol">
-                    <div class="quote-text" id="dailyQuoteOL">Loading motivational quote...</div>
-                    <div class="quote-number quote-number-ol" id="quoteNumberOL"></div>
-                </div>
-                <div class="progress-section">
-                    <div class="progress-item">
-                        <div class="progress-info">
-                            <div class="progress-title">Days Passed</div>
-                            <div class="progress-subtitle">Since O/L 2025 preparation started</div>
-                        </div>
-                        <div class="progress-value progress-value-ol" id="daysPassedOL">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Subject Selection Card -->
-        <div id="subjectSelectionCard" class="card">
-            <div style="text-align: center; margin-bottom: 16px;">
-                <h3 style="font-size: 18px; color: var(--accent2026); margin: 0 0 10px;">A/L 2026 Subject Selection</h3>
-                <p style="font-size: 12px; color: var(--text-secondary); margin: 0;">Select subjects for your timetable</p>
-            </div>
-            <div class="timetable-notice">
-                <div class="timetable-notice-icon">📅</div>
-                <h3 class="timetable-notice-title">A/L 2026 Timetable Not Released Yet</h3>
-                <p class="timetable-notice-text">The official A/L 2026 exam timetable has not been released by the Department of Examinations yet.</p>
-                <p class="timetable-notice-subtext">We will update it once officially released. Please check back later.</p>
-            </div>
-            <div class="subjects-grid">
-                <div class="subject-category">
-                    <h4 class="category-title">Mathematics</h4>
-                    <div class="subjects-list">
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="combined-math-1,combined-math-2" data-name="Combined Mathematics">
-                            <span class="checkmark"></span>
-                            <span>Combined Mathematics</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="higher-mathematics-1,higher-mathematics-2" data-name="Higher Mathematics">
-                            <span class="checkmark"></span>
-                            <span>Higher Mathematics</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="chemistry-1,chemistry-2" data-name="Chemistry">
-                            <span class="checkmark"></span>
-                            <span>Chemistry</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="ict-1,ict-2" data-name="Information Technology">
-                            <span class="checkmark"></span>
-                            <span>Information Technology</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="physics-1,physics-2" data-name="Physics">
-                            <span class="checkmark"></span>
-                            <span>Physics</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="subject-category">
-                    <h4 class="category-title">Science</h4>
-                    <div class="subjects-list">
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="biology-1,biology-2" data-name="Biology">
-                            <span class="checkmark"></span>
-                            <span>Biology</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="chemistry-1,chemistry-2" data-name="Chemistry">
-                            <span class="checkmark"></span>
-                            <span>Chemistry</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="physics-1,physics-2" data-name="Physics">
-                            <span class="checkmark"></span>
-                            <span>Physics</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="agricultural-science-1,agricultural-science-2" data-name="Agricultural Science">
-                            <span class="checkmark"></span>
-                            <span>Agricultural Science</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="subject-category">
-                    <h4 class="category-title">Arts</h4>
-                    <div class="subjects-list">
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="media-studies-1,media-studies-2" data-name="Media Studies">
-                            <span class="checkmark"></span>
-                            <span>Media Studies</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="sinhala-1,sinhala-2" data-name="Sinhala">
-                            <span class="checkmark"></span>
-                            <span>Sinhala</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="history-sri-lanka" data-name="Sri Lanka History">
-                            <span class="checkmark"></span>
-                            <span>Sri Lanka History</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="buddhism-1,buddhism-2" data-name="Buddhism">
-                            <span class="checkmark"></span>
-                            <span>Buddhism</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="geography-1,geography-2" data-name="Geography">
-                            <span class="checkmark"></span>
-                            <span>Geography</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="subject-category">
-                    <h4 class="category-title">Commerce</h4>
-                    <div class="subjects-list">
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="business-studies-1,business-studies-2" data-name="Business Studies">
-                            <span class="checkmark"></span>
-                            <span>Business Studies</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="economics-1,economics-2" data-name="Economics">
-                            <span class="checkmark"></span>
-                            <span>Economics</span>
-                        </label>
-                        <label class="subject-checkbox">
-                            <input type="checkbox" value="accounting-1,accounting-2" data-name="Accounting">
-                            <span class="checkmark"></span>
-                            <span>Accounting</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="selected-count" id="selectedCount">0 subjects selected</div>
-            <div class="selection-actions">
-                <button class="submit-btn disabled" id="showExamDatesBtn" onclick="showMyExamDates()">Show My Exam Dates</button>
-                <button class="clear-btn" onclick="clearSelection()">Clear All</button>
-            </div>
-            <div class="complaint-section">
-                <button class="complaint-btn" onclick="openComplaintWhatsApp()">📝 Report Complaint</button>
-                <p class="complaint-text">Report if your subject is missing or time is wrong</p>
-                <a href="https://doenets.lk/" target="_blank" class="website-link">Visit Official Website</a>
-            </div>
-        </div>
-        
-        <!-- Comments Section -->
-        <div class="comments-section">
-            <div class="comments-header">
-                <h3 class="comments-title">
-                    <i class="fas fa-comments"></i>
-            Comments
-                </h3>
-                <span class="comments-count" id="commentsCount">0 Comments</span>
+                <span class="text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">M&K Promos</span>
             </div>
             
-            <!-- User Name Input Section -->
-            <div class="user-name-input-section" id="userNameSection">
-                <div class="user-name-wrapper">
-                    <input 
-                        type="text" 
-                        id="userNameInput" 
-                        class="user-name-input" 
-                        placeholder="Enter your name..."
-                        maxlength="30"
-                    >
-                    <button class="save-name-btn" onclick="saveUserName()">
-                        <i class="fas fa-save"></i>
-                        Save
-                    </button>
+            <div class="flex items-center gap-3 md:gap-4">
+                <div class="flex bg-white/5 rounded-full p-1 border border-white/10">
+                    <button onclick="toggleLanguage('en')" id="en-btn" class="px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold transition-all bg-indigo-600 text-white shadow-lg">EN</button>
+                    <button onclick="toggleLanguage('si')" id="si-btn" class="px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold transition-all text-gray-400 hover:text-white">සිං</button>
                 </div>
-            </div>
-            
-            <div class="comment-form">
-                <textarea 
-                    class="comment-input" 
-                    id="commentInput" 
-                    placeholder="මේ වෙබ් එක ගැන ඔයාගේ අදහස ලියන්න"
-                    maxlength="500"
-                ></textarea>
-                <div class="comment-actions">
-                    <div class="comment-char-count">
-                        <span id="charCount">0</span> / 500
-                    </div>
-                    <button class="comment-submit" id="commentSubmit" onclick="submitComment()">
-                        Submit Comment
-                    </button>
-                </div>
-            </div>
-            
-            <div class="comments-list" id="commentsList">
-                <div class="empty-comments">
-                    No comments yet. Be the first to comment!
-                </div>
-            </div>
-        </div>
-        
-        <div class="card whatsapp-section">
-            <div class="wa-buttons">
-                <button id="waChat" class="wa-btn wa-btn-chat">
-                    <svg class="wa-icon" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.150-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.520.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.520-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.040 1.016-1.040 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.200 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.360.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                    </svg>
-                    <span class="btn-text">💬 Connect with WhatsApp Bot</span>
+                <button onclick="showAdminLogin()" class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-all">
+                    <i class="fas fa-user-shield text-xs md:text-base text-gray-400 hover:text-white"></i>
                 </button>
             </div>
-            <div class="description">
-                <span style="font-weight:bold; color:var(--text-primary);">✨📚 A/L Exam Countdown Bot 📚✨</span><br><br>
-                <span style="font-weight:bold; color:var(--text-primary);">⏳ Get real-time countdown to your A/L exams with our smart bot 💡</span><br><br>
-                🚀 <span style="font-weight:bold; color:var(--text-primary);">Start the Bot:</span> 
-                <span style="font-weight:bold; color:var(--error);">Hi 👋</span><br><br>
-                <ul>
-                    <li><span style="font-weight:bold; color:var(--text-primary);">✅ Daily countdown reminders + motivational quotes 🔔</span></li>
-                    <li><span style="font-weight:bold; color:var(--text-primary);">📊 Track study progress and achievements</span></li>
-                    <li><span style="font-weight:bold; color:var(--text-primary);">🔒 Secure and instant - Keep track of your A/L goals the easy way!</span></li>
-                </ul>
-                <br>
-               <h3></h3> 🎯 <strong> Get a message every morning! </strong> 🟢<br><h3></h3>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-28 md:pt-32 pb-12 md:pb-20 px-4 text-center relative overflow-hidden">
+        <div class="container mx-auto relative z-10" data-aos="zoom-in">
+            <div class="inline-block mb-6 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs md:text-sm font-semibold tracking-wider uppercase animate-pulse">
+                🚀 #1 Premium Promotion Service
+            </div>
+            <h1 class="text-3xl md:text-7xl font-extrabold mb-4 md:mb-6 leading-tight text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                <span class="english">Boost Your Reach to <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-glow">200K+ Active Users</span></span>
+                <span class="sinhala">ඔබගේ ව්‍යාපාරය <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">200K+ පිරිසක් අතරට</span></span>
+            </h1>
+            <p class="text-base md:text-xl text-gray-400 mb-8 md:mb-10 max-w-2xl mx-auto font-light px-4">
+                <span class="english">Elite advertising packages for maximum visibility on Sri Lanka's top channels.</span>
+                <span class="sinhala">ශ්‍රී ලංකාවේ ප්‍රමුඛතම WhatsApp චැනල් හරහා උපරිම දෘශ්‍යතාවයක් ලබා ගන්න.</span>
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 px-4">
+                <a href="#packages-container" class="w-full sm:w-auto px-8 py-3 md:py-4 bg-white text-dark font-bold rounded-full hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center justify-center gap-2 text-sm md:text-base">
+                    <i class="fas fa-rocket"></i> <span class="english">Explore Packages</span><span class="sinhala">පැකේජ බලන්න</span>
+                </a>
+                <a href="rules.html" target="_blank" class="w-full sm:w-auto px-8 py-3 md:py-4 bg-white/5 border border-white/10 text-white font-bold rounded-full hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-sm md:text-base">
+                    <i class="fas fa-book-open text-pink-400"></i> <span class="english">Read Rules</span><span class="sinhala">නීති කියවන්න</span>
+                </a>
             </div>
         </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pb-20" id="packages-container">
         
-        <div id="examDatesPopup" class="popup-overlay">
-            <div class="popup-modal">
-                <div class="popup-header">
-                    <h3 class="popup-title">My Exam Schedule</h3>
-                    <button class="close-popup" onclick="closeExamDatesPopup()">×</button>
+        <!-- Toggle Switch -->
+        <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-3 md:gap-10 mb-8 md:mb-12 relative z-20" data-aos="fade-up">
+            <button class="toggle-btn active" id="daily-btn">
+                <i class="fas fa-calendar-day text-lg md:text-xl group-hover:animate-bounce"></i>
+                <span>Daily</span>
+            </button>
+            <button class="toggle-btn" id="hourly-btn">
+                <i class="fas fa-clock text-lg md:text-xl group-hover:animate-bounce"></i>
+                <span>Hourly</span>
+            </button>
+            <button class="toggle-btn" id="followers-btn">
+                <i class="fas fa-users text-lg md:text-xl group-hover:animate-bounce"></i>
+                <span>Followers</span>
+            </button>
+        </div>
+
+        <!-- Live Search -->
+        <div class="max-w-md mx-auto mb-10 md:mb-16 relative" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+            <input type="text" id="package-search" onkeyup="filterPackages()" placeholder="Search packages..." class="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-all placeholder-gray-600">
+        </div>
+
+        <!-- Daily Packages -->
+        <section id="daily-packages" class="package-section active">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                
+                <!-- Basic -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group" data-aos="fade-up" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-cube text-8xl text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">BASIC</h3>
+                        <div class="text-4xl font-bold text-indigo-400 mb-6">Rs.500</div>
+                        <ul class="space-y-4 text-gray-400 mb-8 text-sm">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-500"></i> 12K+ Followers</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-indigo-500"></i> 3K+ Channel</li>
+                        </ul>
+                        <button onclick="openBookingModal('Basic Package', 500)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-indigo-600 text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
                 </div>
-                <div class="popup-content">
-                    <div id="examDatesList"></div>
+
+                <!-- Standard -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group" data-aos="fade-up" data-aos-delay="100" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden border-t-2 border-blue-500/50">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-layer-group text-8xl text-blue-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">STANDARD</h3>
+                        <div class="text-4xl font-bold text-blue-400 mb-6">Rs.1,000</div>
+                        <ul class="space-y-4 text-gray-400 mb-8 text-sm">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-blue-500"></i> 19K+ Followers</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-blue-500"></i> 12K+ Channel</li>
+                        </ul>
+                        <button onclick="openBookingModal('Standard Package', 1000)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-blue-600 text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
                 </div>
-                <div class="popup-footer">
-                    <button class="popup-btn" onclick="copyMySchedule()">Copy Schedule</button>
-                    <button class="popup-btn download-btn" onclick="downloadScheduleImage()">📷 Download Image</button>
-                    <button class="popup-btn close-btn" onclick="closeExamDatesPopup()">Close</button>
+
+                <!-- Dual Boost -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group" data-aos="fade-up" data-aos-delay="200" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden border-t-2 border-orange-500/50">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-rocket text-8xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">DUAL BOOST</h3>
+                        <div class="text-4xl font-bold text-orange-400 mb-6">Rs.1,800</div>
+                        <ul class="space-y-4 text-gray-400 mb-8 text-sm">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-orange-500"></i> 35K+ Channel</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-orange-500"></i> 19K+ Channel</li>
+                        </ul>
+                        <button onclick="openBookingModal('Dual Digital Boost', 1800)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-orange-600 text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- Special -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group" data-aos="fade-up" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden border-t-2 border-yellow-500/50">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-star text-8xl text-yellow-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">SPECIAL</h3>
+                        <div class="text-4xl font-bold text-yellow-400 mb-6">Rs.2,500</div>
+                        <ul class="space-y-4 text-gray-400 mb-8 text-sm">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-yellow-500"></i> 35K+ Funny</li>
+                            <li class="flex items-center gap-3 justify-center font-bold text-xs opacity-50">- OR -</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-yellow-500"></i> 100K+ Buddhist</li>
+                        </ul>
+                        <button onclick="openBookingModal('Funny/Buddhist Special', 2500)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-yellow-500 hover:text-black text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- Funny Dual -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group" data-aos="fade-up" data-aos-delay="100" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden border-t-2 border-purple-500/50">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-masks-theater text-8xl text-purple-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">FUNNY DUAL</h3>
+                        <div class="text-4xl font-bold text-purple-400 mb-6">Rs.3,400</div>
+                        <ul class="space-y-4 text-gray-400 mb-8 text-sm">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-purple-500"></i> 87K+ Funny</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-purple-500"></i> 35K+ Funny</li>
+                        </ul>
+                        <button onclick="openBookingModal('Funny Dual Pack', 3400)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-purple-600 text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- Triple Boost -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group" data-aos="fade-up" data-aos-delay="200" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden border-t-2 border-cyan-500/50">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-bolt text-8xl text-cyan-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">TRIPLE BOOST</h3>
+                        <div class="text-4xl font-bold text-cyan-400 mb-6">Rs.5,500</div>
+                        <ul class="space-y-4 text-gray-400 mb-8 text-sm">
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-cyan-500"></i> 87K+ Funny</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-cyan-500"></i> 35K+ Funny</li>
+                            <li class="flex items-center gap-3"><i class="fas fa-check text-cyan-500"></i> 100K+ Buddhist</li>
+                        </ul>
+                        <button onclick="openBookingModal('Triple Boost', 5500)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-600 text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- All In One -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group md:col-span-2 lg:col-span-1" data-aos="fade-up" data-tilt>
+                    <div class="bg-slate-900/80 rounded-[22px] h-full p-6 relative overflow-hidden border-t-2 border-gray-500/50">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-globe text-8xl text-gray-400"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-200 mb-2">ALL IN ONE</h3>
+                        <div class="text-4xl font-bold text-white mb-6">Rs.7,500</div>
+                        <ul class="space-y-2 text-gray-400 mb-8 text-xs grid grid-cols-2 gap-2">
+                            <li class="flex items-center gap-1"><i class="fas fa-check text-gray-500"></i> 87K+</li>
+                            <li class="flex items-center gap-1"><i class="fas fa-check text-gray-500"></i> 35K+</li>
+                            <li class="flex items-center gap-1"><i class="fas fa-check text-gray-500"></i> 100K+</li>
+                            <li class="flex items-center gap-1"><i class="fas fa-check text-gray-500"></i> 5K+</li>
+                            <li class="flex items-center gap-1 col-span-2"><i class="fas fa-check text-gray-500"></i> Two 2K+ Channels</li>
+                        </ul>
+                        <button onclick="openBookingModal('All In One Pack', 7500)" class="w-full py-3 rounded-xl bg-white/5 hover:bg-gray-600 text-white font-bold border border-white/10 transition-all">Book Now</button>
+                    </div>
+                </div>
+
+                <!-- Premium Pack -->
+                <div class="glass-card rounded-3xl p-1 overflow-hidden group md:col-span-2 lg:col-span-2" data-aos="fade-up" data-aos-delay="100" data-tilt>
+                    <div class="bg-gradient-to-br from-yellow-900/40 to-slate-900/80 rounded-[22px] h-full p-8 relative overflow-hidden border border-yellow-500/30">
+                        <div class="absolute top-0 right-0 bg-yellow-500 text-black font-bold px-4 py-1 rounded-bl-xl text-xs">BEST VALUE</div>
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-all duration-500 group-hover:scale-125">
+                            <i class="fas fa-crown text-9xl text-yellow-500"></i>
+                        </div>
+                        <div class="relative z-10 flex flex-col md:flex-row justify-between gap-8">
+                            <div class="flex-1">
+                                <h3 class="text-3xl font-extrabold text-yellow-400 mb-2">PREMIUM PACK</h3>
+                                <div class="text-5xl font-bold text-white mb-2">Rs.8,300</div>
+                                <p class="text-yellow-200/60 mb-6">The ultimate promotion solution with video editing.</p>
+                                <button onclick="openBookingModal('Premium Pack', 8300)" class="w-full md:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold hover:shadow-[0_0_20px_rgba(234,179,8,0.4)] transition-all">Get Premium Now</button>
+                            </div>
+                            <div class="flex-1 space-y-4 text-gray-300">
+                                <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5"><i class="fas fa-star text-yellow-500"></i> Funny & Buddhist Video Edit</div>
+                                <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5"><i class="fas fa-star text-yellow-500"></i> Link added to caption</div>
+                                <div class="flex items-center gap-3 p-3 rounded-lg bg-white/5"><i class="fas fa-star text-yellow-500"></i> Permanent Post (Never Deleted)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Hourly Packages -->
+        <section id="hourly-packages" class="package-section">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Template Hourly -->
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform" data-aos="fade-up">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-indigo-400">BASIC HOURLY</h3>
+                        <span class="text-xl font-bold text-white">Rs.300</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-indigo-500 mr-2"></i> 10K+ Followers</li>
+                        <li><i class="fas fa-check text-indigo-500 mr-2"></i> 2K+ Followers</li>
+                        <li><i class="fas fa-check text-indigo-500 mr-2"></i> 4K+ Channel</li>
+                    </ul>
+                    <button onclick="openBookingModal('BASIC HOURLY', 300)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-indigo-600 border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-blue-400">STANDARD HOURLY</h3>
+                        <span class="text-xl font-bold text-white">Rs.500</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-blue-500 mr-2"></i> 35K+ Followers</li>
+                        <li><i class="fas fa-check text-blue-500 mr-2"></i> 5K+ Channel</li>
+                    </ul>
+                    <button onclick="openBookingModal('STANDARD HOURLY PACK', 500)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-blue-600 border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform border border-yellow-500/20" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-yellow-400">SPECIAL HOURLY</h3>
+                        <span class="text-xl font-bold text-white">Rs.1,200</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-yellow-500 mr-2"></i> 35K+ Funny / 100K+ Buddhist</li>
+                    </ul>
+                    <button onclick="openBookingModal('BUDDHIST / FUNNY SPECIAL', 1200)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-yellow-600 hover:text-black border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+
+                <!-- More Hourly items structured similarly... -->
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform" data-aos="fade-up">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-purple-400">FUNNY PREMIUM</h3>
+                        <span class="text-xl font-bold text-white">Rs.800</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i> 87K+ Funny Channel</li>
+                    </ul>
+                    <button onclick="openBookingModal('FUNNY PREMIUM PACK', 800)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-purple-600 border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform" data-aos="fade-up">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-purple-400">FUNNY DUAL</h3>
+                        <span class="text-xl font-bold text-white">Rs.1,200</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-purple-500 mr-2"></i> 87K+ & 35K+ Funny</li>
+                    </ul>
+                    <button onclick="openBookingModal('FUNNY DUAL PACK', 1200)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-purple-600 border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform" data-aos="fade-up">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-cyan-400">TRIPLE BOOST</h3>
+                        <span class="text-xl font-bold text-white">Rs.2,000</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400">
+                        <li><i class="fas fa-check text-cyan-500 mr-2"></i> 87K+ Funny</li>
+                        <li><i class="fas fa-check text-cyan-500 mr-2"></i> 35K+ Funny</li>
+                        <li><i class="fas fa-check text-cyan-500 mr-2"></i> 100K+ Buddhist</li>
+                    </ul>
+                    <button onclick="openBookingModal('TRIPLE BOOST PACK', 2000)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-cyan-600 border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 hover:-translate-y-2 transition-transform border border-pink-500/20 md:col-span-2 lg:col-span-1" data-aos="fade-up">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-pink-400">ALL-IN-ONE HOURLY</h3>
+                        <span class="text-xl font-bold text-white">Rs.3,000</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
+                    <ul class="space-y-2 mb-6 text-sm text-gray-400 grid grid-cols-2 gap-2">
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> 100K+</li>
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> 87K+</li>
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> 35K+</li>
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> 42K+</li>
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> 5K+</li>
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> Others</li>
+                    </ul>
+                    <button onclick="openBookingModal('ALL-IN-ONE HOURLY PACK', 2300)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-pink-600 border border-white/10 transition-all font-semibold">Book Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Followers Packages -->
+        <section id="followers-packages" class="package-section">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                <!-- Helper Template for small follower cards -->
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform" data-aos="fade-up">
+                    <h4 class="text-gray-300 font-semibold mb-2 text-sm md:text-base">O/L Channel</h4>
+                    <div class="text-lg md:text-2xl font-bold text-indigo-400 mb-1">Rs.2,400</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">1000 Followers</p>
+                    <button onclick="openBookingModal('O/L channel', 2400)" class="w-full py-1.5 md:py-2 rounded bg-white/5 hover:bg-indigo-600 border border-white/10 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform" data-aos="fade-up" data-aos-delay="50">
+                    <h4 class="text-gray-300 font-semibold mb-2 text-sm md:text-base">A/L Channel</h4>
+                    <div class="text-lg md:text-2xl font-bold text-indigo-400 mb-1">Rs.2,800</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">1000 Followers</p>
+                    <button onclick="openBookingModal('A/L channel', 2800)" class="w-full py-1.5 md:py-2 rounded bg-white/5 hover:bg-indigo-600 border border-white/10 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform" data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-gray-300 font-semibold mb-2 text-sm md:text-base">Status Channel</h4>
+                    <div class="text-lg md:text-2xl font-bold text-indigo-400 mb-1">Rs.1,000</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">1000 Followers</p>
+                    <button onclick="openBookingModal('Status channel', 1000)" class="w-full py-1.5 md:py-2 rounded bg-white/5 hover:bg-indigo-600 border border-white/10 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform" data-aos="fade-up" data-aos-delay="150">
+                    <h4 class="text-gray-300 font-semibold mb-2 text-sm md:text-base">Business Ch</h4>
+                    <div class="text-lg md:text-2xl font-bold text-indigo-400 mb-1">Rs.3,000</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">1000 Followers</p>
+                    <button onclick="openBookingModal('buisness channel', 3000)" class="w-full py-1.5 md:py-2 rounded bg-white/5 hover:bg-indigo-600 border border-white/10 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <!-- Groups -->
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-blue-500/20" data-aos="fade-up">
+                    <h4 class="text-blue-300 font-semibold mb-2 text-sm md:text-base">O/L Group</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.2,800</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">Full Group</p>
+                    <button onclick="openBookingModal('O/L group', 2800)" class="w-full py-1.5 md:py-2 rounded bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-blue-500/20" data-aos="fade-up" data-aos-delay="50">
+                    <h4 class="text-blue-300 font-semibold mb-2 text-sm md:text-base">A/L Group</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.3,000</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">Full Group</p>
+                    <button onclick="openBookingModal('A/L group', 3000)" class="w-full py-1.5 md:py-2 rounded bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-blue-500/20" data-aos="fade-up" data-aos-delay="50">
+                    <h4 class="text-blue-300 font-semibold mb-2 text-sm md:text-base">Status Group</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.1,600</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">Full Group</p>
+                    <button onclick="openBookingModal('Status group', 1600)" class="w-full py-1.5 md:py-2 rounded bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                 <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-blue-500/20" data-aos="fade-up" data-aos-delay="50">
+                    <h4 class="text-blue-300 font-semibold mb-2 text-sm md:text-base">buisness Group</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.3,800</div>
+                    <p class="text-[10px] md:text-xs text-gray-500 mb-3 md:mb-4">Full Group</p>
+                    <button onclick="openBookingModal('buisness group', 3800)" class="w-full py-1.5 md:py-2 rounded bg-blue-500/10 hover:bg-blue-600 border border-blue-500/20 text-xs font-bold transition-all">Book</button>
+                </div>
+
+                <!-- Mini Packs -->
+                <div class="glass-card rounded-2xl p-3 md:p-4 text-center hover:scale-105 transition-transform" data-aos="zoom-in">
+                    <h5 class="text-gray-400 text-xs md:text-sm">100 Pack</h5>
+                    <div class="text-base md:text-lg font-bold text-white my-1">Rs.300</div>
+                    <button onclick="openBookingModal('100 PACK', 300)" class="text-[10px] md:text-xs text-indigo-400 hover:text-white underline">Book</button>
+                </div>
+                <div class="glass-card rounded-2xl p-3 md:p-4 text-center hover:scale-105 transition-transform" data-aos="zoom-in" data-aos-delay="50">
+                    <h5 class="text-gray-400 text-xs md:text-sm">200 Pack</h5>
+                    <div class="text-base md:text-lg font-bold text-white my-1">Rs.400</div>
+                    <button onclick="openBookingModal('200 PACK', 400)" class="text-[10px] md:text-xs text-indigo-400 hover:text-white underline">Book</button>
+                </div>
+                <div class="glass-card rounded-2xl p-3 md:p-4 text-center hover:scale-105 transition-transform" data-aos="zoom-in" data-aos-delay="100">
+                    <h5 class="text-gray-400 text-xs md:text-sm">300 Pack</h5>
+                    <div class="text-base md:text-lg font-bold text-white my-1">Rs.600</div>
+                    <button onclick="openBookingModal('300 PACK', 600)" class="text-[10px] md:text-xs text-indigo-400 hover:text-white underline">Book</button>
+                </div>
+                <div class="glass-card rounded-2xl p-3 md:p-4 text-center hover:scale-105 transition-transform" data-aos="zoom-in" data-aos-delay="150">
+                    <h5 class="text-gray-400 text-xs md:text-sm">500 Pack</h5>
+                    <div class="text-base md:text-lg font-bold text-white my-1">Rs.1,200</div>
+                    <button onclick="openBookingModal('500 PACK', 1200)" class="text-[10px] md:text-xs text-indigo-400 hover:text-white underline">Book</button>
+                </div>
+
+                <!-- Large Packs -->
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-purple-500/20 col-span-2 md:col-span-1" data-aos="fade-up">
+                    <h4 class="text-purple-300 font-semibold mb-2 text-sm md:text-base">1K Pack</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.2,500</div>
+                    <button onclick="openBookingModal('1k PACK', 2500)" class="w-full py-1.5 md:py-2 rounded bg-purple-500/10 hover:bg-purple-600 border border-purple-500/20 text-xs font-bold transition-all mt-2">Book</button>
+                </div>
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-purple-500/20 col-span-2 md:col-span-1" data-aos="fade-up" data-aos-delay="50">
+                    <h4 class="text-purple-300 font-semibold mb-2 text-sm md:text-base">2K Pack</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.3,000</div>
+                    <button onclick="openBookingModal('2k PACK', 3000)" class="w-full py-1.5 md:py-2 rounded bg-purple-500/10 hover:bg-purple-600 border border-purple-500/20 text-xs font-bold transition-all mt-2">Book</button>
+                </div>
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-purple-500/20 col-span-2 md:col-span-1" data-aos="fade-up" data-aos-delay="50">
+                    <h4 class="text-purple-300 font-semibold mb-2 text-sm md:text-base">3K Pack</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.4,300</div>
+                    <button onclick="openBookingModal('3k PACK', 4300)" class="w-full py-1.5 md:py-2 rounded bg-purple-500/10 hover:bg-purple-600 border border-purple-500/20 text-xs font-bold transition-all mt-2">Book</button>
+                </div>
+                <div class="glass-card rounded-2xl p-4 md:p-6 text-center hover:-translate-y-2 transition-transform border border-purple-500/20 col-span-2 md:col-span-1" data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-purple-300 font-semibold mb-2 text-sm md:text-base">5K Pack</h4>
+                    <div class="text-lg md:text-2xl font-bold text-white mb-1">Rs.6,300</div>
+                    <button onclick="openBookingModal('5k PACK', 6300)" class="w-full py-1.5 md:py-2 rounded bg-purple-500/10 hover:bg-purple-600 border border-purple-500/20 text-xs font-bold transition-all mt-2">Book</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Info Section -->
+    <section class="py-12 md:py-20 relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="glass-card rounded-3xl p-6 md:p-10 border-l-4 border-red-500" data-aos="fade-left">
+                <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-4 flex items-center gap-3">
+                    <i class="fas fa-exclamation-triangle"></i> Important Notice
+                </h2>
+                <p class="text-gray-300 leading-relaxed max-w-4xl text-sm md:text-base">
+                    <span class="english">Your ad will be kept for the exact time you select as the "last update". No additional updates will be posted after that time. However, the ad will NOT be deleted and will remain active for 24 hours.</span>
+                    <span class="sinhala block mt-2 text-gray-400">අන්තිම update එක විදිහට තෝරන කාලයට හරියටම ඔයාගේ දැන්වීම තබා ගනී. එම කාලයෙන් පසු වෙනත් update එකක් දාන්නේ නැහැ. ඒත් එම කාලයෙන් පසුවත් update 2ක් හෝ 3ක් drop වුණත්, ඇඩ් එක delete කරන්නේ නැහැ. පැය 24ක් පුරාවට delete නොකර channel එකේම තබා ගන්නවා.</span>
+                </p>
+                <div class="mt-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+                    <p class="text-green-400 text-xs md:text-sm font-semibold">🎉 Special Offer: Repost the same ad the next day and get 10% OFF! (Excludes Basic Pack).</p>
                 </div>
             </div>
         </div>
-        
-        <div id="alertPopup" class="alert-overlay">
-            <div class="alert-modal">
-                <div class="alert-icon" id="alertIcon">⏰</div>
-                <h3 class="alert-title" id="alertTitle">Message</h3>
-                <p class="alert-message" id="alertMessage">This is a message</p>
-                <div class="alert-actions">
-                    <button class="alert-btn primary" onclick="closeAlert()">OK</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <div class="footer-text">
-                Powered by <span class="footer-brand">Sadeepa & Shamika</span> • 
-                <span id="currentTime"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating Action Buttons -->
-    <button class="floating-contact-btn" onclick="openContactPopup()">
-        <i class="fas fa-envelope"></i>
-    </button>
-
-    <button class="floating-comment-btn" onclick="scrollToComments()">
-        <i class="fas fa-comment"></i>
-    </button>
-
-    <button class="scroll-to-top" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <button class="user-name-btn" onclick="changeUserName()">
-        <i class="fas fa-user"></i>
-    </button>
-
-    <!-- Side Menu -->
-    <button id="menuBtn" class="menu-toggle-btn">
-        <i class="fas fa-bars"></i>
-    </button>
+    </section>
     
-    <div id="sideMenu" class="side-menu">
-        <div class="side-menu-header">
-            <h3 class="side-menu-title">Menu</h3>
-            <button class="side-menu-close" onclick="closeSideMenu()">×</button>
+
+    <!-- Footer -->
+     <section class="py-20 relative z-10">
+    <div class="container mx-auto px-4">
+        
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Community</span>
+            </h2>
+            <p class="text-gray-400 text-lg">Join 200K+ active members across our network</p>
         </div>
-        <div class="side-menu-content">
-            <button class="menu-item" onclick="openContactPopup(); closeSideMenu();">
-                <i class="fas fa-envelope"></i>
-                <span class="menu-item-text">Contact via Email</span>
-            </button>
-            <button class="menu-item" onclick="changeUserName(); closeSideMenu();">
-                <i class="fas fa-user"></i>
-                <span class="menu-item-text">Change Username</span>
-            </button>
-            <button class="menu-item" onclick="scrollToComments(); closeSideMenu();">
-                <i class="fas fa-comment"></i>
-                <span class="menu-item-text">Go to Comments</span>
-            </button>
-            <button class="menu-item" onclick="scrollToTop(); closeSideMenu();">
-                <i class="fas fa-arrow-up"></i>
-                <span class="menu-item-text">Go to Top</span>
-            </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <a href="https://whatsapp.com/channel/0029Vb6n24M05MUYH9tZZ022" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center mb-6 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-wifi text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Free Data Offers</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>2,250+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029Vb6ogyEFXUufM9dLsa3A" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-quote-right text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">English Status</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>4,210+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029VbBxyuG0Vyc7iTdPEa1U" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-music text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Sindu Videos</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>3,100+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029VbBmvNYEQIakOTBz540d" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center mb-6 shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-dharmachakra text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Pirith Deshana</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>4,380+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029VbCLmjlC1FuCHrwvEy1M" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-play-circle text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Sindu Videos 02</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>18,300+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029Vb6rRMzLI8YVlEM7IA3O" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center mb-6 shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-laugh-squint text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Athal Videos 02</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>87,230+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029Vb6EyI21Hsq4faGGvE1V" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-laugh-beam text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Athal Videos</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>34,070+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://whatsapp.com/channel/0029Vb6BBoK3LdQaKQVbhP1p" target="_blank" class="group">
+                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-hands-praying text-2xl text-white"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-bold text-white mb-2">Kathnoruwe Siridhamma</h3>
+                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>104,418+ Members</p>
+                    
+                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                        Join Channel
+                    </div>
+                </div>
+            </a>
+
         </div>
     </div>
-
-    <!-- Contact Popup -->
-    <div id="contactPopup" class="popup-overlay">
-        <div class="contact-modal">
-            <button class="close-popup" onclick="closeContactPopup()">×</button>
-            <div class="contact-header">
-                <div class="logo">📧</div>
-                <h2>Contact Us</h2>
-                <p>We'd love to hear from you</p>
+</section>
+    <footer class="py-12 glass-panel border-t border-white/5 mt-10">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold text-white mb-8">Contact Us</h2>
+            <div class="flex justify-center gap-8 mb-8">
+                <a href="https://wa.me/94775048455" class="w-14 h-14 rounded-full bg-white/5 hover:bg-green-600 flex items-center justify-center text-white transition-all text-2xl border border-white/10 hover:scale-110"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://wa.me/9476748970" class="w-14 h-14 rounded-full bg-white/5 hover:bg-green-600 flex items-center justify-center text-white transition-all text-2xl border border-white/10 hover:scale-110"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <form id="contactForm">
-                <input type="hidden" name="access_key" value="fd9a9424-521d-4b92-951d-bd41f19f7898">
-                <div class="form-group">
-                    <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="name" required placeholder="Sadeepa">
+            <p class="text-gray-600 text-sm">© 2026 M&K Promotions. Designed for DMC Group.</p>
+            <p class="text-gray-600 text-sm">Admin Team: Malindu Nethmina | D.M.Kaawya | Ushan </p>
+        </div>
+    </footer>
+
+    <!-- Fixed WhatsApp Widget -->
+    <a href="https://wa.me/94775048455" target="_blank" class="fixed bottom-6 right-6 z-50 group">
+        <div class="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-20 group-hover:opacity-40"></div>
+        <div class="w-14 h-14 md:w-16 md:h-16 bg-green-500 rounded-full flex items-center justify-center text-white text-2xl md:text-3xl shadow-lg shadow-green-500/40 relative transform transition-transform hover:scale-110 hover:-translate-y-1">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+    </a>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content w-[95%] md:w-[600px] max-h-[85vh] overflow-y-auto mx-auto mt-12 md:mt-20 rounded-[20px] md:rounded-[30px] shadow-2xl relative bg-[#0f172a] border border-white/10" data-aos="zoom-in">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fas fa-calendar-check text-indigo-500"></i> Booking
+                    </h2>
+                    <button onclick="closeBookingModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center text-gray-400 hover:text-white transition-all"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input type="email" id="email" name="email" required placeholder="sadeepa@example.com">
-                </div>
-                <div class="form-group">
-                    <label for="subject">Subject *</label>
-                    <input type="text" id="subject" name="subject" required placeholder="How can we help you?">
-                </div>
-                <div class="form-group">
-                    <label for="message">Message *</label>
-                    <textarea id="message" name="message" required placeholder="Tell us more details..."></textarea>
-                </div>
-                <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
-            </form>
-            <div id="statusMessage" class="status-message"></div>
+                
+                <form onsubmit="submitBooking(event)" class="space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Package</label>
+                        <input type="text" id="selected-package" readonly class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-indigo-300 font-semibold focus:outline-none text-sm">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 md:gap-4">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Date</label>
+                            <input type="date" id="booking-date" required class="w-full bg-slate-800 border border-white/10 rounded-xl px-3 md:px-4 py-3 text-white text-sm focus:border-indigo-500 focus:outline-none transition-colors">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Time</label>
+                            <input type="time" id="booking-time" required class="w-full bg-slate-800 border border-white/10 rounded-xl px-3 md:px-4 py-3 text-white text-sm focus:border-indigo-500 focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Extra Time</label>
+                        <select id="extra-days" onchange="calculateTotal()" class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-indigo-500 focus:outline-none transition-colors">
+                            <option value="0">Standard (No Extra)</option>
+                            <option value="1">2 Hours (+Rs.300)</option>
+                            <option value="2">3 Hours (+Rs.400)</option>
+                            <option value="3">4 Hours (+Rs.500)</option>
+                            <option value="4">5 Hours (+Rs.650)</option>
+                            <option value="5">6 Hours (+Rs.700)</option>
+                            <option value="6">7 PM to 7 AM (+Rs.1200)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                        <input type="text" id="customer-name" placeholder="Your Name" required class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 text-sm focus:border-indigo-500 focus:outline-none transition-colors">
+                        <input type="tel" id="contact-number" placeholder="WhatsApp Number" required class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 text-sm focus:border-indigo-500 focus:outline-none transition-colors">
+                    </div>
+
+                    <div class="flex justify-between items-center pt-4 border-t border-white/5 mt-4">
+                        <div>
+                            <p class="text-xs text-gray-500">Total Amount</p>
+                            <p id="total-amount" class="text-xl md:text-2xl font-bold text-white">Rs.0</p>
+                        </div>
+                        <button type="submit" class="px-6 md:px-8 py-2.5 md:py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-bold shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 text-sm md:text-base">Confirm</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- Hidden Admin Elements -->
+    <div id="admin-login" class="hidden"></div>
+    <div id="admin-dashboard" class="hidden"></div>
 
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    
     <script>
-        // Side Menu functionality
-        const menuBtn = document.getElementById('menuBtn');
-        const sideMenu = document.getElementById('sideMenu');
+        // Initialize Supabase with your credentials
+        const supabaseUrl = 'https://nstnkxtxlqelwnefkmaij.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zdG5reHR4bHFlbHduZWZrbWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NDU3NDgsImV4cCI6MjA4MjQyMTc0OH0.Zge04N0pCj2XnvYrL2LmfVPJ1vGpt1akokAtMtHFLE8';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        function openSideMenu() {
-            sideMenu.classList.add('show');
+        // Init Animations
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 30
+        });
+
+        // Language Logic
+        function toggleLanguage(lang) {
+            const english = document.querySelectorAll('.english');
+            const sinhala = document.querySelectorAll('.sinhala');
+            const enBtn = document.getElementById('en-btn');
+            const siBtn = document.getElementById('si-btn');
+
+            if (lang === 'en') {
+                english.forEach(el => el.style.display = 'block');
+                sinhala.forEach(el => el.style.display = 'none');
+                enBtn.classList.replace('text-gray-400', 'bg-indigo-600');
+                enBtn.classList.add('text-white');
+                siBtn.classList.remove('bg-indigo-600', 'text-white');
+                siBtn.classList.add('text-gray-400');
+            } else {
+                english.forEach(el => el.style.display = 'none');
+                sinhala.forEach(el => el.style.display = 'block');
+                siBtn.classList.replace('text-gray-400', 'bg-indigo-600');
+                siBtn.classList.add('text-white');
+                enBtn.classList.remove('bg-indigo-600', 'text-white');
+                enBtn.classList.add('text-gray-400');
+            }
         }
 
-        function closeSideMenu() {
-            sideMenu.classList.remove('show');
-        }
-
-        if (menuBtn && sideMenu) {
-            menuBtn.addEventListener('click', openSideMenu);
+        // Tab Switching
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = ['daily', 'hourly', 'followers'];
             
-            // Close menu when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!sideMenu.contains(e.target) && !menuBtn.contains(e.target) && sideMenu.classList.contains('show')) {
-                    closeSideMenu();
+            tabs.forEach(tab => {
+                document.getElementById(`${tab}-btn`).addEventListener('click', () => {
+                    // Update Buttons
+                    tabs.forEach(t => document.getElementById(`${t}-btn`).classList.remove('active'));
+                    document.getElementById(`${tab}-btn`).classList.add('active');
+                    
+                    // Update Content
+                    document.querySelectorAll('.package-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(`${tab}-packages`).classList.add('active');
+                });
+            });
+
+            // Set Min Date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('booking-date').min = today;
+            
+            toggleLanguage('en');
+        });
+
+        // Search Logic
+        function filterPackages() {
+            const query = document.getElementById('package-search').value.toLowerCase();
+            const activeSection = document.querySelector('.package-section.active');
+            const cards = activeSection.querySelectorAll('.glass-card'); // Target card containers
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
                 }
             });
         }
 
-        // Contact button functionality
-        const contactBtn = document.createElement('button');
-        contactBtn.className = 'floating-contact-btn';
-        contactBtn.innerHTML = '<i class="fas fa-envelope"></i>';
-        contactBtn.onclick = openContactPopup;
-        document.body.appendChild(contactBtn);
+        // Booking Logic
+        let currentPackage = '';
+        let currentPrice = 0;
+
+        function openBookingModal(pkgName, price) {
+            currentPackage = pkgName;
+            currentPrice = price;
+            
+            document.getElementById('selected-package').value = pkgName;
+            document.getElementById('booking-date').value = '';
+            document.getElementById('booking-time').value = '';
+            document.getElementById('extra-days').value = '0';
+            document.getElementById('customer-name').value = '';
+            document.getElementById('contact-number').value = '';
+            
+            calculateTotal();
+            document.getElementById('booking-modal').style.display = 'block';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').style.display = 'none';
+        }
+
+        function calculateTotal() {
+            const extra = parseInt(document.getElementById('extra-days').value) || 0;
+            let extraCost = 0;
+            const costs = {1:300, 2:400, 3:500, 4:650, 5:700, 6:1200};
+            if(costs[extra]) extraCost = costs[extra];
+            
+            const total = currentPrice + extraCost;
+            document.getElementById('total-amount').innerText = `Rs.${total}`;
+        }
+
+        // Submit booking to Supabase
+        async function submitBooking(e) {
+            e.preventDefault();
+            const extra = parseInt(document.getElementById('extra-days').value) || 0;
+            let extraCost = 0;
+            const costs = {1:300, 2:400, 3:500, 4:650, 5:700, 6:1200};
+            if(costs[extra]) extraCost = costs[extra];
+            
+            const total = currentPrice + extraCost;
+            
+            const booking = {
+                package: currentPackage,
+                date: document.getElementById('booking-date').value,
+                time: document.getElementById('booking-time').value,
+                extraDays: extra,
+                name: document.getElementById('customer-name').value,
+                contact: document.getElementById('contact-number').value,
+                paymentStatus: 'unpaid',
+                total: total,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                // Insert data into Supabase
+                const { data, error } = await supabase
+                    .from('bookings')
+                    .insert([booking]);
+
+                if (error) {
+                    console.error('Supabase Error:', error);
+                    // Fallback to localStorage if Supabase fails
+                    let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+                    booking.id = Date.now();
+                    bookings.push(booking);
+                    localStorage.setItem('bookings', JSON.stringify(bookings));
+                } else {
+                    console.log('Successfully saved to Supabase:', data);
+                }
+            } catch (err) {
+                console.error('Network or other error:', err);
+                // Fallback to localStorage if network error
+                let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+                booking.id = Date.now();
+                bookings.push(booking);
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+            }
+
+            // Send WhatsApp message
+            const msg = `Booking Request:\nPackage: ${booking.package}\nTotal: Rs.${booking.total}\nName: ${booking.name}`;
+            window.open(`https://wa.me/94775048455?text=${encodeURIComponent(msg)}`, '_blank');
+            
+            closeBookingModal();
+        }
+
+        function showAdminLogin() {
+            window.location.href = 'admin.html';
+        }
     </script>
+    
 </body>
 </html>
