@@ -4,24 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M&K Admin Suite</title>
+    
+    <!-- CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Initialize Supabase with your credentials
-  const supabaseUrl = "https://nstnkxtxlqelwnefkmaij.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zdG5reHR4bHFlbHduZWZrbWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NDU3NDgsImV4cCI6MjA4MjQyMTc0OH0.Zge04N0pCj2XnvYrL2LmfVPJ1vGpt1akokAtMtHFLE8";
-
-  const supabase = window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-  );
-</script>
-
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://nstnkxtxlqelwnefkmaj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zdG5reHR4bHFlbHduZWZrbWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NDU3NDgsImV4cCI6MjA4MjQyMTc0OH0.Zge04N0pCj2XnvYrL2LmfVPJ1vGpt1akokAtMtHFLE8';
+        
+        // Create Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Tailwind Config
         tailwind.config = {
             theme: {
                 extend: {
@@ -101,10 +100,11 @@
                     <i class="fas fa-rocket text-2xl text-white"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-white">Admin Access</h2>
+                <p class="text-gray-400 text-sm mt-2">Default: admin / admin123</p>
             </div>
             <form id="login-form" class="space-y-4">
-                <input type="text" id="login-user" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="Username" required>
-                <input type="password" id="login-pass" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="Password" required>
+                <input type="text" id="login-user" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="Username" required value="admin">
+                <input type="password" id="login-pass" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="Password" required value="admin123">
                 <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:-translate-y-0.5">
                     Unlock Dashboard
                 </button>
@@ -212,9 +212,12 @@
 
                 <!-- Recent Activity Mini Table -->
                 <div class="glass-panel rounded-2xl overflow-hidden p-6">
-                    <h3 class="text-lg font-bold text-white mb-4">Quick Stats</h3>
-                    <div class="h-48 md:h-64 flex items-center justify-center text-gray-500">
-                        <p>Detailed stats available in 'Finances' tab</p>
+                    <h3 class="text-lg font-bold text-white mb-4">Recent Bookings</h3>
+                    <div id="recent-bookings" class="h-48 md:h-64 overflow-y-auto">
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                            <p>Loading recent bookings...</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -243,7 +246,7 @@
                                 </tr>
                             </thead>
                             <tbody id="bookings-table-body" class="divide-y divide-white/5 text-gray-300">
-                                <!-- Data Rows Here -->
+                                <!-- Data will be loaded here -->
                             </tbody>
                         </table>
                     </div>
@@ -336,6 +339,17 @@
                             </div>
                         </div>
 
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Date</label>
+                                <input type="date" id="nb-date" class="glass-input w-full px-4 py-3 rounded-xl" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Time</label>
+                                <input type="time" id="nb-time" class="glass-input w-full px-4 py-3 rounded-xl" required>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-sm text-gray-400 mb-2">Payment Status</label>
                             <div class="flex gap-4">
@@ -370,16 +384,33 @@
                         <form id="creds-form" class="space-y-4">
                             <div>
                                 <label class="block text-sm text-gray-400 mb-2">New Username</label>
-                                <input type="text" id="set-user" class="glass-input w-full px-4 py-3 rounded-xl">
+                                <input type="text" id="set-user" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="admin">
                             </div>
                             <div>
                                 <label class="block text-sm text-gray-400 mb-2">New Password</label>
-                                <input type="password" id="set-pass" class="glass-input w-full px-4 py-3 rounded-xl">
+                                <input type="password" id="set-pass" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="admin123">
                             </div>
                             <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium transition-all">
                                 Update Credentials
                             </button>
                         </form>
+                    </div>
+
+                    <!-- Database Info -->
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-emerald-500/20">
+                        <h3 class="text-lg md:text-xl font-bold text-emerald-400 mb-2">Database Status</h3>
+                        <p class="text-gray-400 text-sm mb-4">Connected to Supabase</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Bookings Count:</span>
+                                <span id="db-bookings-count" class="text-white font-bold">0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Total Revenue:</span>
+                                <span id="db-total-revenue" class="text-emerald-400 font-bold">Rs. 0</span>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Danger Zone -->
@@ -397,7 +428,7 @@
         </main>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JavaScript Logic -->
     <script>
         // --- Mobile Menu Toggle ---
         function toggleSidebar() {
@@ -415,58 +446,61 @@
 
         // --- State Management ---
         const state = {
-            bookings: [],
-            adminCreds: null // Loaded from storage
+            adminCreds: { user: 'admin', pass: 'admin123' }
         };
 
-        // --- Init ---
+        // --- Initialize ---
         document.addEventListener('DOMContentLoaded', () => {
-            loadFromStorage();
-            checkSession(); // The Security Guard
+            // Set today's date for new booking form
+            const today = new Date().toISOString().split('T')[0];
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            
+            document.getElementById('nb-date').value = today;
+            document.getElementById('nb-date').min = today;
+            document.getElementById('nb-time').value = timeString;
+
+            // Load credentials from localStorage
+            const storedCreds = localStorage.getItem('admin_creds');
+            if (storedCreds) {
+                state.adminCreds = JSON.parse(storedCreds);
+            }
 
             // Bind Events
             document.getElementById('login-form').addEventListener('submit', handleLogin);
             document.getElementById('new-booking-form').addEventListener('submit', handleNewBooking);
             document.getElementById('creds-form').addEventListener('submit', handleCredsUpdate);
+
+            // Check session
+            checkSession();
         });
 
-        // --- 1. Session Guard ---
+        // --- Session Management ---
         function checkSession() {
             const isAuth = sessionStorage.getItem('admin_session');
             const loginView = document.getElementById('login-view');
             const appView = document.getElementById('app-view');
 
             if (isAuth === 'true') {
-                // Access Granted
                 loginView.classList.add('hidden');
                 appView.classList.remove('hidden');
                 setTimeout(() => appView.classList.remove('opacity-0'), 50);
                 refreshViews();
             } else {
-                // Access Denied - Force Login
                 loginView.classList.remove('hidden');
                 appView.classList.add('hidden');
                 appView.classList.add('opacity-0');
             }
         }
 
-        // --- 2. Login Logic (Strict Fallback) ---
+        // --- Login Logic ---
         function handleLogin(e) {
             e.preventDefault();
             const inputUser = document.getElementById('login-user').value.trim();
             const inputPass = document.getElementById('login-pass').value.trim();
 
-            // A. Retrieve Credentials Source
-            let validUser = 'admin';
-            let validPass = 'admin123';
-
-            if (state.adminCreds && state.adminCreds.user && state.adminCreds.pass) {
-                validUser = state.adminCreds.user;
-                validPass = state.adminCreds.pass;
-            }
-
-            // B. Validate
-            if (inputUser === validUser && inputPass === validPass) {
+            // Validate credentials
+            if (inputUser === state.adminCreds.user && inputPass === state.adminCreds.pass) {
                 sessionStorage.setItem('admin_session', 'true');
                 
                 // Transition
@@ -493,16 +527,8 @@
             window.location.reload();
         }
 
-        // --- Data Layer ---
-        function loadFromStorage() {
-            const storedCreds = localStorage.getItem('admin_creds');
-            if (storedCreds) {
-                state.adminCreds = JSON.parse(storedCreds);
-            }
-        }
-
         // --- Navigation ---
-        window.showSection = function(id, el) {
+        function showSection(id, el) {
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             
@@ -510,96 +536,213 @@
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 el.classList.add('active');
             }
+            
+            // Refresh data when switching to certain sections
+            if (id === 'sec-dashboard' || id === 'sec-bookings' || id === 'sec-finances') {
+                refreshViews();
+            }
+        }
+        window.showSection = showSection;
+
+        // --- Refresh All Views ---
+        async function refreshViews() {
+            if(!sessionStorage.getItem('admin_session')) return;
+            
+            try {
+                await renderDashboard();
+                await renderBookingsTable();
+                await renderFinances();
+                await renderRecentBookings();
+                await updateDatabaseStats();
+            } catch (error) {
+                console.error('Error refreshing views:', error);
+            }
         }
 
         // --- Dashboard Logic ---
-        function renderDashboard() {
-            const total = state.bookings.length;
-            const income = state.bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
-            const paid = state.bookings
-                .filter(b => b.paymentStatus === 'paid')
-                .reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
-            
-            document.getElementById('dash-total-orders').textContent = total;
-            document.getElementById('dash-total-income').textContent = `Rs. ${income.toLocaleString()}`;
-            document.getElementById('dash-cash-collected').textContent = `Rs. ${paid.toLocaleString()}`;
-            document.getElementById('dash-pending-cash').textContent = `Rs. ${(income - paid).toLocaleString()}`;
-        }
+        async function renderDashboard() {
+            try {
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select('*');
 
-        // --- Bookings Logic ---
-        function renderBookingsTable(filterText = '') {
-            const tbody = document.getElementById('bookings-table-body');
-            tbody.innerHTML = '';
-            
-            const filtered = state.bookings.filter(b => 
-                b.name.toLowerCase().includes(filterText.toLowerCase()) || 
-                b.contact.includes(filterText)
-            ).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+                if (error) throw error;
 
-            if(filtered.length === 0) {
-                document.getElementById('no-data-msg').classList.remove('hidden');
-            } else {
-                document.getElementById('no-data-msg').classList.add('hidden');
+                const total = bookings.length;
+                const income = bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+                const paid = bookings
+                    .filter(b => b.paymentStatus === 'paid')
+                    .reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
                 
-                filtered.forEach(b => {
-                    const isPaid = b.paymentStatus === 'paid';
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-white/5 transition-colors';
-                    tr.innerHTML = `
-                        <td class="px-6 py-4 text-gray-400">
-                            <div>${b.date || 'N/A'}</div>
-                            <div class="text-xs opacity-50">${b.time || ''}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-white font-medium">${b.name}</div>
-                            <div class="text-xs text-gray-500">${b.contact}</div>
-                        </td>
-                        <td class="px-6 py-4 text-indigo-300 font-medium">${b.package}</td>
-                        <td class="px-6 py-4 text-right font-bold text-white">Rs. ${parseFloat(b.total).toLocaleString()}</td>
-                        <td class="px-6 py-4 text-center">
-                            <button onclick="togglePaymentStatus(${b.id})" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${isPaid ? 'bg-green-500/20 text-green-400 border-green-500/20 hover:bg-green-500/30' : 'bg-orange-500/20 text-orange-400 border-orange-500/20 hover:bg-orange-500/30'}">
-                                ${isPaid ? 'Paid' : 'Unpaid'}
-                            </button>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="https://wa.me/94${b.contact.replace(/^0/,'')}" target="_blank" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white flex items-center justify-center transition-all">
-                                    <i class="fab fa-whatsapp"></i>
-                                </a>
-                                <button onclick="deleteBooking(${b.id})" class="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
+                document.getElementById('dash-total-orders').textContent = total;
+                document.getElementById('dash-total-income').textContent = `Rs. ${income.toLocaleString()}`;
+                document.getElementById('dash-cash-collected').textContent = `Rs. ${paid.toLocaleString()}`;
+                document.getElementById('dash-pending-cash').textContent = `Rs. ${(income - paid).toLocaleString()}`;
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load dashboard data',
+                    background: '#1e293b',
+                    color: '#fff'
                 });
             }
         }
 
+        // --- Recent Bookings ---
+        async function renderRecentBookings() {
+            try {
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                const container = document.getElementById('recent-bookings');
+                if (bookings.length === 0) {
+                    container.innerHTML = '<div class="text-center py-8 text-gray-500"><i class="fas fa-inbox text-2xl mb-2"></i><p>No recent bookings</p></div>';
+                    return;
+                }
+
+                let html = '<div class="space-y-2">';
+                bookings.forEach(booking => {
+                    const isPaid = booking.paymentStatus === 'paid';
+                    html += `
+                        <div class="flex justify-between items-center p-3 rounded-lg bg-white/5">
+                            <div>
+                                <div class="font-medium text-white">${booking.name}</div>
+                                <div class="text-xs text-gray-400">${booking.package}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-bold text-white">Rs. ${parseFloat(booking.total).toLocaleString()}</div>
+                                <span class="text-xs ${isPaid ? 'text-green-400' : 'text-orange-400'}">${isPaid ? 'Paid' : 'Unpaid'}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Error loading recent bookings:', error);
+            }
+        }
+
+        // --- Bookings Logic ---
+        async function renderBookingsTable(filterText = '') {
+            try {
+                const tbody = document.getElementById('bookings-table-body');
+                tbody.innerHTML = '';
+                
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const filtered = bookings.filter(b => 
+                    b.name.toLowerCase().includes(filterText.toLowerCase()) || 
+                    b.contact.includes(filterText)
+                );
+
+                if(filtered.length === 0) {
+                    document.getElementById('no-data-msg').classList.remove('hidden');
+                } else {
+                    document.getElementById('no-data-msg').classList.add('hidden');
+                    
+                    filtered.forEach(b => {
+                        const isPaid = b.paymentStatus === 'paid';
+                        const tr = document.createElement('tr');
+                        tr.className = 'hover:bg-white/5 transition-colors';
+                        tr.innerHTML = `
+                            <td class="px-6 py-4 text-gray-400">
+                                <div>${b.date || 'N/A'}</div>
+                                <div class="text-xs opacity-50">${b.time || ''}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-white font-medium">${b.name}</div>
+                                <div class="text-xs text-gray-500">${b.contact}</div>
+                            </td>
+                            <td class="px-6 py-4 text-indigo-300 font-medium">${b.package}</td>
+                            <td class="px-6 py-4 text-right font-bold text-white">Rs. ${parseFloat(b.total).toLocaleString()}</td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="togglePaymentStatus(${b.id})" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${isPaid ? 'bg-green-500/20 text-green-400 border-green-500/20 hover:bg-green-500/30' : 'bg-orange-500/20 text-orange-400 border-orange-500/20 hover:bg-orange-500/30'}">
+                                    ${isPaid ? 'Paid' : 'Unpaid'}
+                                </button>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    <a href="https://wa.me/94${b.contact.replace(/^0/,'')}" target="_blank" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white flex items-center justify-center transition-all">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    <button onclick="deleteBooking(${b.id})" class="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load bookings',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+            }
+        }
+
+        // Search filter
         window.filterBookings = function() {
             const text = document.getElementById('search-input').value;
             renderBookingsTable(text);
         }
 
+        // Toggle payment status
         window.togglePaymentStatus = async function(id) {
-            const booking = state.bookings.find(b => b.id === id);
-            if(booking) {
+            try {
+                // Get current status
+                const { data: booking, error: fetchError } = await supabase
+                    .from('bookings')
+                    .select('paymentStatus')
+                    .eq('id', id)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
                 const newStatus = booking.paymentStatus === 'paid' ? 'unpaid' : 'paid';
-                try {
-                    const { error } = await supabase
-                        .from('bookings')
-                        .update({ paymentStatus: newStatus })
-                        .eq('id', id);
-                    if (error) throw error;
-                    fetchBookingsFromSupabase();
-                } catch (error) {
-                    console.error('Error updating payment status:', error);
-                    Swal.fire('Error!', 'Could not update status.', 'error');
-                }
+                
+                // Update status
+                const { error } = await supabase
+                    .from('bookings')
+                    .update({ paymentStatus: newStatus })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                // Refresh views
+                refreshViews();
+                
+            } catch (error) {
+                console.error('Error updating payment status:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to update payment status',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
             }
         }
 
+        // Delete booking
         window.deleteBooking = async function(id) {
             Swal.fire({
                 title: 'Delete Order?',
@@ -607,8 +750,10 @@
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
                 background: '#1e293b',
-                color: '#fff'
+                color: '#fff',
+                confirmButtonText: 'Yes, delete it!'
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -616,74 +761,116 @@
                             .from('bookings')
                             .delete()
                             .eq('id', id);
+
                         if (error) throw error;
-                        Swal.fire('Deleted!', 'Booking has been deleted.', 'success');
-                        fetchBookingsFromSupabase();
+
+                        // Refresh all views
+                        refreshViews();
+                        
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'The booking has been deleted.',
+                            icon: 'success',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            background: '#1e293b',
+                            color: '#fff'
+                        });
                     } catch (error) {
                         console.error('Error deleting booking:', error);
-                        Swal.fire('Error!', 'Could not delete booking.', 'error');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to delete booking',
+                            background: '#1e293b',
+                            color: '#fff'
+                        });
                     }
                 }
-            })
+            });
         }
 
         // --- Finances Logic ---
-        function renderFinances() {
-            const income = state.bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
-            
-            const adminShare = income * 0.30;
-            const ownerShare = income * 0.70;
+        async function renderFinances() {
+            try {
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select('*');
 
-            document.getElementById('fin-total-rev').textContent = `Rs. ${income.toLocaleString()}`;
-            document.getElementById('fin-admin-profit').textContent = `Rs. ${adminShare.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-            document.getElementById('fin-owner-profit').textContent = `Rs. ${ownerShare.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                if (error) throw error;
 
-            const paidCount = state.bookings.filter(b => b.paymentStatus === 'paid').length;
-            const totalCount = state.bookings.length;
-            const rate = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
-            document.getElementById('fin-collection-rate').textContent = `${rate}%`;
+                const income = bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+                
+                const adminShare = income * 0.30;
+                const ownerShare = income * 0.70;
+
+                document.getElementById('fin-total-rev').textContent = `Rs. ${income.toLocaleString()}`;
+                document.getElementById('fin-admin-profit').textContent = `Rs. ${adminShare.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                document.getElementById('fin-owner-profit').textContent = `Rs. ${ownerShare.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+
+                const paidCount = bookings.filter(b => b.paymentStatus === 'paid').length;
+                const totalCount = bookings.length;
+                const rate = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
+                document.getElementById('fin-collection-rate').textContent = `${rate}%`;
+            } catch (error) {
+                console.error('Error loading finances:', error);
+            }
         }
 
         // --- New Booking Logic ---
         async function handleNewBooking(e) {
             e.preventDefault();
             
-            const newEntry = {
-                name: document.getElementById('nb-name').value,
-                contact: document.getElementById('nb-contact').value,
-                package: document.getElementById('nb-package').value,
-                total: parseFloat(document.getElementById('nb-price').value),
-                date: new Date().toISOString().split('T')[0],
-                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                paymentStatus: document.querySelector('input[name="nb-status"]:checked').value
-            };
-
             try {
-                const { data, error } = await supabase
+                const newEntry = {
+                    name: document.getElementById('nb-name').value,
+                    contact: document.getElementById('nb-contact').value,
+                    package: document.getElementById('nb-package').value,
+                    total: parseFloat(document.getElementById('nb-price').value),
+                    date: document.getElementById('nb-date').value,
+                    time: document.getElementById('nb-time').value,
+                    paymentStatus: document.querySelector('input[name="nb-status"]:checked').value
+                };
+
+                const { error } = await supabase
                     .from('bookings')
                     .insert([newEntry]);
 
-                if (error) {
-                    console.error('Error creating booking:', error);
-                    Swal.fire('Error!', 'Could not create booking.', 'error');
-                } else {
-                    console.log('Booking created:', data);
-                    Swal.fire({
-                        title: 'Booking Added!',
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false,
-                        background: '#1e293b',
-                        color: '#fff'
-                    }).then(() => {
-                        e.target.reset();
-                        showSection('sec-bookings');
-                        fetchBookingsFromSupabase();
-                    });
-                }
-            } catch (err) {
-                console.error('Network error:', err);
-                Swal.fire('Error!', 'Network issue.', 'error');
+                if (error) throw error;
+
+                // Reset form
+                e.target.reset();
+                
+                // Set default date and time
+                const today = new Date().toISOString().split('T')[0];
+                const now = new Date();
+                const timeString = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+                document.getElementById('nb-date').value = today;
+                document.getElementById('nb-time').value = timeString;
+                
+                // Show success message
+                Swal.fire({
+                    title: 'Booking Added!',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: '#1e293b',
+                    color: '#fff'
+                }).then(() => {
+                    // Refresh views and switch to bookings section
+                    refreshViews();
+                    showSection('sec-bookings');
+                });
+                
+            } catch (error) {
+                console.error('Error creating booking:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to create booking',
+                    icon: 'error',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
             }
         }
 
@@ -696,23 +883,44 @@
             if(u && p) {
                 state.adminCreds = { user: u, pass: p };
                 localStorage.setItem('admin_creds', JSON.stringify(state.adminCreds));
+                
                 Swal.fire({
                     title: 'Updated!',
-                    text: 'Please login with new credentials.',
+                    text: 'Admin credentials updated successfully.',
                     icon: 'success',
                     background: '#1e293b',
                     color: '#fff'
-                }).then(() => logout());
+                });
             }
         }
 
-        window.clearAllData = async function() {
+        // --- Database Statistics ---
+        async function updateDatabaseStats() {
+            try {
+                const { data: bookings, error } = await supabase
+                    .from('bookings')
+                    .select('*');
+
+                if (error) throw error;
+
+                const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+                
+                document.getElementById('db-bookings-count').textContent = bookings.length;
+                document.getElementById('db-total-revenue').textContent = `Rs. ${totalRevenue.toLocaleString()}`;
+            } catch (error) {
+                console.error('Error updating database stats:', error);
+            }
+        }
+
+        // --- Clear All Data ---
+        window.clearAllData = function() {
             Swal.fire({
-                title: 'NUKE DATABASE?',
-                text: "This will delete ALL bookings permanently!",
+                title: 'DELETE ALL DATA?',
+                text: "This will delete ALL bookings from the database!",
                 icon: 'error',
                 showCancelButton: true,
                 confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
                 confirmButtonText: 'Yes, DELETE ALL',
                 background: '#1e293b',
                 color: '#fff'
@@ -722,56 +930,33 @@
                         const { error } = await supabase
                             .from('bookings')
                             .delete()
-                            .neq('id', 0); // Deletes all rows
+                            .neq('id', 0); // Delete all rows
+
                         if (error) throw error;
-                        state.bookings = [];
+
+                        // Refresh all views
                         refreshViews();
+                        
                         Swal.fire({
-                            title: 'Reset Complete',
+                            title: 'Database Cleared!',
+                            text: 'All bookings have been deleted.',
                             icon: 'success',
                             background: '#1e293b',
                             color: '#fff'
                         });
                     } catch (error) {
                         console.error('Error clearing data:', error);
-                        Swal.fire('Error!', 'Could not clear data.', 'error');
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Failed to clear database',
+                            icon: 'error',
+                            background: '#1e293b',
+                            color: '#fff'
+                        });
                     }
                 }
-            })
+            });
         }
-        
-        // --- Supabase Integration ---
-        async function fetchBookingsFromSupabase() {
-            try {
-                const { data, error } = await supabase
-                    .from('bookings')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) {
-                    console.error('Error fetching bookings:', error);
-                    // Fallback to localStorage if Supabase fails
-                    const storedBookings = localStorage.getItem('bookings');
-                    state.bookings = storedBookings ? JSON.parse(storedBookings) : [];
-                } else {
-                    console.log('Bookings fetched from Supabase:', data);
-                    state.bookings = data;
-                }
-                refreshViews();
-            } catch (err) {
-                console.error('Network error:', err);
-                loadFromStorage();
-            }
-        }
-
-        function refreshViews() {
-            if(!sessionStorage.getItem('admin_session')) return;
-            renderDashboard();
-            renderBookingsTable();
-            renderFinances();
-        }
-
     </script>
 </body>
 </html>
-<!-- END OF admin.html -->
