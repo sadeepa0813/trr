@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M&K Promotions - Premium WhatsApp Advertising</title>
-    <!-- Supabase JS Client -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
     <!-- CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Sinhala:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://nstnkxtxlqelwnefkmaj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zdG5reHR4bHFlbHduZWZrbWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NDU3NDgsImV4cCI6MjA4MjQyMTc0OH0.Zge04N0pCj2XnvYrL2LmfVPJ1vGpt1akokAtMtHFLE8';
+        
+        // Create Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Tailwind Config
         tailwind.config = {
             theme: {
                 extend: {
@@ -21,10 +30,10 @@
                         sinhala: ['Noto Sans Sinhala', 'serif'],
                     },
                     colors: {
-                        primary: '#6366f1', // Indigo
-                        secondary: '#8b5cf6', // Violet
-                        accent: '#ec4899', // Pink
-                        dark: '#020617', // Slate 950
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#ec4899',
+                        dark: '#020617',
                     },
                     animation: {
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -106,7 +115,23 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Modal */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(8px); }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(8px); 
+        }
+        
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body oncontextmenu="return false;" onkeydown="if(event.ctrlKey && event.keyCode == 85) return false;">
@@ -410,8 +435,8 @@
                     <p class="text-sm text-gray-500 mb-6">Duration: 1 Hour</p>
                     <ul class="space-y-2 mb-6 text-sm text-gray-400">
                         <li><i class="fas fa-check text-cyan-500 mr-2"></i> 87K+ Funny</li>
-                        <li><i class="fas fa-check text-cyan-500 mr-2"></i> 35K+ Funny</li>
-                        <li><i class="fas fa-check text-cyan-500 mr-2"></i> 100K+ Buddhist</li>
+                            <li><i class="fas fa-check text-cyan-500 mr-2"></i> 35K+ Funny</li>
+                            <li><i class="fas fa-check text-cyan-500 mr-2"></i> 100K+ Buddhist</li>
                     </ul>
                     <button onclick="openBookingModal('TRIPLE BOOST PACK', 2000)" class="w-full py-2 rounded-lg bg-white/5 hover:bg-cyan-600 border border-white/10 transition-all font-semibold">Book Now</button>
                 </div>
@@ -564,157 +589,158 @@
     
 
     <!-- Footer -->
-     <section class="py-20 relative z-10">
-    <div class="container mx-auto px-4">
-        
-        <div class="text-center mb-16" data-aos="fade-up">
-            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Community</span>
-            </h2>
-            <p class="text-gray-400 text-lg">Join 200K+ active members across our network</p>
+    <section class="py-20 relative z-10">
+        <div class="container mx-auto px-4">
+            
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Community</span>
+                </h2>
+                <p class="text-gray-400 text-lg">Join 200K+ active members across our network</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <a href="https://whatsapp.com/channel/0029Vb6n24M05MUYH9tZZ022" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center mb-6 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-wifi text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Free Data Offers</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>2,250+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029Vb6ogyEFXUufM9dLsa3A" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-quote-right text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">English Status</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>4,210+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029VbBxyuG0Vyc7iTdPEa1U" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-music text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Sindu Videos</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>3,100+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029VbBmvNYEQIakOTBz540d" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center mb-6 shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-dharmachakra text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Pirith Deshana</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>4,380+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029VbCLmjlC1FuCHrwvEy1M" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-play-circle text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Sindu Videos 02</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>18,300+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029Vb6rRMzLI8YVlEM7IA3O" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center mb-6 shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-laugh-squint text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Athal Videos 02</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>87,230+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029Vb6EyI21Hsq4faGGvE1V" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-laugh-beam text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Athal Videos</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>34,070+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029Vb6BBoK3LdQaKQVbhP1p" target="_blank" class="group">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                        
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-hands-praying text-2xl text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-white mb-2">Kathnoruwe Siridhamma</h3>
+                        <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>104,418+ Members</p>
+                        
+                        <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
+                            Join Channel
+                        </div>
+                    </div>
+                </a>
+
+            </div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <a href="https://whatsapp.com/channel/0029Vb6n24M05MUYH9tZZ022" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center mb-6 shadow-lg shadow-green-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-wifi text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Free Data Offers</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>2,250+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029Vb6ogyEFXUufM9dLsa3A" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-quote-right text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">English Status</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>4,210+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029VbBxyuG0Vyc7iTdPEa1U" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-music text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Sindu Videos</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>3,100+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029VbBmvNYEQIakOTBz540d" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center mb-6 shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-dharmachakra text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Pirith Deshana</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>4,380+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029VbCLmjlC1FuCHrwvEy1M" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-play-circle text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Sindu Videos 02</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>18,300+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029Vb6rRMzLI8YVlEM7IA3O" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-red-500 flex items-center justify-center mb-6 shadow-lg shadow-red-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-laugh-squint text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Athal Videos 02</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>87,230+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029Vb6EyI21Hsq4faGGvE1V" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-laugh-beam text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Athal Videos</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>34,070+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-            <a href="https://whatsapp.com/channel/0029Vb6BBoK3LdQaKQVbhP1p" target="_blank" class="group">
-                <div class="glass-card p-6 rounded-3xl relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.3)] border border-white/5 bg-slate-800/50 backdrop-blur-xl h-full">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                    
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-red-600 flex items-center justify-center mb-6 shadow-lg shadow-orange-500/20 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-hands-praying text-2xl text-white"></i>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold text-white mb-2">Kathnoruwe Siridhamma</h3>
-                    <p class="text-green-400 text-sm font-medium mb-4"><i class="fas fa-users mr-2"></i>104,418+ Members</p>
-                    
-                    <div class="w-full py-3 rounded-xl bg-white/5 text-center text-gray-300 group-hover:bg-green-600 group-hover:text-white transition-colors font-semibold text-sm">
-                        Join Channel
-                    </div>
-                </div>
-            </a>
-
-        </div>
-    </div>
-</section>
+    </section>
+    
     <footer class="py-12 glass-panel border-t border-white/5 mt-10">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-2xl font-bold text-white mb-8">Contact Us</h2>
@@ -737,7 +763,7 @@
 
     <!-- Booking Modal -->
     <div id="booking-modal" class="modal">
-        <div class="modal-content w-[95%] md:w-[600px] max-h-[85vh] overflow-y-auto mx-auto mt-12 md:mt-20 rounded-[20px] md:rounded-[30px] shadow-2xl relative bg-[#0f172a] border border-white/10" data-aos="zoom-in">
+        <div class="modal-content w-[95%] md:w-[600px] max-h-[85vh] overflow-y-auto mx-auto mt-12 md:mt-20 rounded-[20px] md:rounded-[30px] shadow-2xl relative" data-aos="zoom-in">
             <div class="p-6 md:p-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl md:text-2xl font-bold text-white flex items-center gap-3">
@@ -746,7 +772,7 @@
                     <button onclick="closeBookingModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center text-gray-400 hover:text-white transition-all"><i class="fas fa-times"></i></button>
                 </div>
                 
-                <form onsubmit="submitBooking(event)" class="space-y-4">
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Package</label>
                         <input type="text" id="selected-package" readonly class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-indigo-300 font-semibold focus:outline-none text-sm">
@@ -786,33 +812,37 @@
                             <p class="text-xs text-gray-500">Total Amount</p>
                             <p id="total-amount" class="text-xl md:text-2xl font-bold text-white">Rs.0</p>
                         </div>
-                        <button type="submit" class="px-6 md:px-8 py-2.5 md:py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-bold shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 text-sm md:text-base">Confirm</button>
+                        <button type="submit" class="px-6 md:px-8 py-2.5 md:py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-bold shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 text-sm md:text-base">Confirm Booking</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Hidden Admin Elements -->
-    <div id="admin-login" class="hidden"></div>
-    <div id="admin-dashboard" class="hidden"></div>
-
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
-        // Initialize Supabase with your credentials
-        const supabaseUrl = 'https://nstnkxtxlqelwnefkmaij.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5zdG5reHR4bHFlbHduZWZrbWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4NDU3NDgsImV4cCI6MjA4MjQyMTc0OH0.Zge04N0pCj2XnvYrL2LmfVPJ1vGpt1akokAtMtHFLE8';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
         // Init Animations
         AOS.init({
             duration: 800,
             once: true,
             offset: 30
         });
+
+        // Initialize tilt effect on cards
+        VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+        });
+
+        // Global variables
+        let currentPackage = '';
+        let currentPrice = 0;
 
         // Language Logic
         function toggleLanguage(lang) {
@@ -851,6 +881,10 @@
                     // Update Content
                     document.querySelectorAll('.package-section').forEach(s => s.classList.remove('active'));
                     document.getElementById(`${tab}-packages`).classList.add('active');
+                    
+                    // Clear search
+                    document.getElementById('package-search').value = '';
+                    filterPackages();
                 });
             });
 
@@ -858,6 +892,7 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('booking-date').min = today;
             
+            // Set default language
             toggleLanguage('en');
         });
 
@@ -865,7 +900,7 @@
         function filterPackages() {
             const query = document.getElementById('package-search').value.toLowerCase();
             const activeSection = document.querySelector('.package-section.active');
-            const cards = activeSection.querySelectorAll('.glass-card'); // Target card containers
+            const cards = activeSection.querySelectorAll('.glass-card');
 
             cards.forEach(card => {
                 const text = card.innerText.toLowerCase();
@@ -877,10 +912,7 @@
             });
         }
 
-        // Booking Logic
-        let currentPackage = '';
-        let currentPrice = 0;
-
+        // Booking Modal Functions
         function openBookingModal(pkgName, price) {
             currentPackage = pkgName;
             currentPrice = price;
@@ -908,67 +940,87 @@
             
             const total = currentPrice + extraCost;
             document.getElementById('total-amount').innerText = `Rs.${total}`;
+            return total;
         }
 
-        // Submit booking to Supabase
+        // Submit Booking to Supabase
         async function submitBooking(e) {
             e.preventDefault();
-            const extra = parseInt(document.getElementById('extra-days').value) || 0;
-            let extraCost = 0;
-            const costs = {1:300, 2:400, 3:500, 4:650, 5:700, 6:1200};
-            if(costs[extra]) extraCost = costs[extra];
             
-            const total = currentPrice + extraCost;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
             
-            const booking = {
-                package: currentPackage,
-                date: document.getElementById('booking-date').value,
-                time: document.getElementById('booking-time').value,
-                extraDays: extra,
-                name: document.getElementById('customer-name').value,
-                contact: document.getElementById('contact-number').value,
-                paymentStatus: 'unpaid',
-                total: total,
-                created_at: new Date().toISOString()
-            };
+            // Show loading state
+            submitBtn.innerText = 'Processing...';
+            submitBtn.disabled = true;
 
             try {
-                // Insert data into Supabase
+                const totalAmount = calculateTotal();
+                
+                const bookingData = {
+                    package: currentPackage,
+                    date: document.getElementById('booking-date').value,
+                    time: document.getElementById('booking-time').value,
+                    name: document.getElementById('customer-name').value,
+                    contact: document.getElementById('contact-number').value,
+                    total: totalAmount,
+                    paymentStatus: 'unpaid'
+                };
+
+                // Insert into Supabase
                 const { data, error } = await supabase
                     .from('bookings')
-                    .insert([booking]);
+                    .insert([bookingData]);
 
-                if (error) {
-                    console.error('Supabase Error:', error);
-                    // Fallback to localStorage if Supabase fails
-                    let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-                    booking.id = Date.now();
-                    bookings.push(booking);
-                    localStorage.setItem('bookings', JSON.stringify(bookings));
-                } else {
-                    console.log('Successfully saved to Supabase:', data);
-                }
-            } catch (err) {
-                console.error('Network or other error:', err);
-                // Fallback to localStorage if network error
-                let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-                booking.id = Date.now();
-                bookings.push(booking);
-                localStorage.setItem('bookings', JSON.stringify(bookings));
+                if (error) throw error;
+
+                // Success message
+                Swal.fire({
+                    title: 'Booking Successful!',
+                    text: 'We will contact you on WhatsApp shortly.',
+                    icon: 'success',
+                    confirmButtonColor: '#6366f1',
+                    background: '#0f172a',
+                    color: '#fff'
+                });
+
+                // Send WhatsApp message
+                const whatsappMessage = `Booking Request:\nPackage: ${bookingData.package}\nTotal: Rs.${bookingData.total}\nName: ${bookingData.name}\nContact: ${bookingData.contact}\nDate: ${bookingData.date}\nTime: ${bookingData.time}`;
+                window.open(`https://wa.me/94775048455?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
+
+                // Close modal and reset
+                closeBookingModal();
+                e.target.reset();
+
+            } catch (error) {
+                console.error('Error saving booking:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to save booking. Please try again.',
+                    icon: 'error',
+                    confirmButtonColor: '#ef4444',
+                    background: '#0f172a',
+                    color: '#fff'
+                });
+            } finally {
+                // Reset button
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
             }
-
-            // Send WhatsApp message
-            const msg = `Booking Request:\nPackage: ${booking.package}\nTotal: Rs.${booking.total}\nName: ${booking.name}`;
-            window.open(`https://wa.me/94775048455?text=${encodeURIComponent(msg)}`, '_blank');
-            
-            closeBookingModal();
         }
 
+        // Admin login
         function showAdminLogin() {
             window.location.href = 'admin.html';
         }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('booking-modal');
+            if (event.target == modal) {
+                closeBookingModal();
+            }
+        }
     </script>
-    
 </body>
 </html>
-<!-- END OF index.html -->
