@@ -4,20 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M&K Admin Suite</title>
-    
-    <!-- CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        dark: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             background: radial-gradient(circle at 10% 20%, rgb(15, 23, 42) 0%, rgb(10, 10, 15) 100%);
             color: #e2e8f0;
-            font-family: 'Outfit', sans-serif;
         }
         
+        /* Glass Components */
         .glass-panel {
             background: rgba(30, 41, 59, 0.4);
             backdrop-filter: blur(20px);
@@ -32,407 +46,1079 @@
             color: white;
             transition: all 0.3s;
         }
-        
         .glass-input:focus {
             outline: none;
             border-color: #6366f1;
             background: rgba(0, 0, 0, 0.4);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
+
+        /* Nav Item Active State */
+        .nav-item.active {
+            background: linear-gradient(to right, rgba(99, 102, 241, 0.2), transparent);
+            border-left: 4px solid #6366f1;
+            color: white;
+        }
+
+        .nav-item {
+            border-left: 4px solid transparent;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Animations */
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
         
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            transition: transform 0.3s;
+        /* Online Badge */
+        .online-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
         }
         
-        .stat-card:hover {
-            transform: translateY(-5px);
+        .manual-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 4px;
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="overflow-hidden h-screen font-sans text-gray-300">
 
     <!-- Login Screen -->
-    <div id="login-screen" class="fixed inset-0 flex items-center justify-center bg-slate-900 bg-opacity-90 z-50">
-        <div class="glass-panel p-8 rounded-3xl w-full max-w-md">
+    <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]">
+        <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-slate-900/80"></div>
+        <div class="glass-panel w-full max-w-md p-8 rounded-3xl relative z-10 mx-4">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/30">
-                    <i class="fas fa-lock text-2xl text-white"></i>
+                <div class="w-16 h-16 bg-gradient-to-tr from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/30">
+                    <i class="fas fa-rocket text-2xl text-white"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-white">Admin Access</h2>
-                <p class="text-gray-400 text-sm mt-2">Default: admin / admin123</p>
             </div>
-            
             <form id="login-form" class="space-y-4">
-                <input type="text" id="username" placeholder="Username" 
-                       class="glass-input w-full px-4 py-3 rounded-xl" 
-                       value="admin" required>
-                <input type="password" id="password" placeholder="Password" 
-                       class="glass-input w-full px-4 py-3 rounded-xl"
-                       value="admin123" required>
-                <button type="submit" 
-                        class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:-translate-y-0.5">
+                <input type="text" id="login-user" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="Username" required>
+                <input type="password" id="login-pass" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="Password" required>
+                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:-translate-y-0.5">
                     Unlock Dashboard
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- Main Dashboard -->
-    <div id="dashboard" class="hidden p-4 md:p-6">
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-white">
-                    <i class="fas fa-chart-line text-indigo-400 mr-3"></i>
-                    M&K Admin Dashboard
-                </h1>
-                <p class="text-gray-400 mt-2">Real-time booking analytics and management</p>
-            </div>
-            <button onclick="logout()" 
-                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-xl font-bold flex items-center gap-2 transition-all">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
+    <!-- Main App Layout -->
+    <div id="app-view" class="flex h-full hidden opacity-0 transition-opacity duration-500 relative">
         
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="stat-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Total Orders</p>
-                        <h3 class="text-2xl font-bold text-white" id="total-orders">0</h3>
+        <!-- Mobile Sidebar Toggle Overlay -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden glass-panel backdrop-blur-sm"></div>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 glass-panel border-r-0 border-r-white/5 flex flex-col z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 md:relative">
+            <div class="p-6 flex items-center justify-between border-b border-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/50">
+                        <i class="fas fa-bolt text-white text-xs"></i>
                     </div>
-                    <i class="fas fa-shopping-cart text-3xl text-blue-400 opacity-50"></i>
+                    <h1 class="font-bold text-lg text-white tracking-wide">M&K Suite</h1>
                 </div>
+                <!-- Close Button Mobile -->
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
-            
-            <div class="stat-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Total Revenue</p>
-                        <h3 class="text-2xl font-bold text-emerald-400" id="total-revenue">Rs. 0</h3>
-                    </div>
-                    <i class="fas fa-wallet text-3xl text-emerald-400 opacity-50"></i>
-                </div>
+
+            <nav class="flex-1 py-6 space-y-1">
+                <a href="#" onclick="showSection('sec-dashboard', this); toggleSidebar()" class="nav-item active flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-chart-pie w-5"></i> Dashboard
+                </a>
+                <a href="#" onclick="showSection('sec-bookings', this); toggleSidebar()" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-table-list w-5"></i> Bookings
+                </a>
+                <a href="#" onclick="showSection('sec-finances', this); toggleSidebar()" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-coins w-5"></i> Finances
+                </a>
+                <a href="#" onclick="showSection('sec-new-booking', this); toggleSidebar()" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-plus-circle w-5"></i> New Booking
+                </a>
+                <a href="#" onclick="showSection('sec-settings', this); toggleSidebar()" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
+                    <i class="fas fa-cog w-5"></i> Settings
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-white/5">
+                <button onclick="syncWithOnline()" class="w-full mb-3 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white border border-blue-500/20 transition-all text-sm font-medium">
+                    <i class="fas fa-sync-alt mr-2"></i> Sync Online Data
+                </button>
+                <button onclick="logout()" class="w-full py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/20 transition-all text-sm font-medium">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
             </div>
-            
-            <div class="stat-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Paid Amount</p>
-                        <h3 class="text-2xl font-bold text-green-400" id="paid-amount">Rs. 0</h3>
-                    </div>
-                    <i class="fas fa-check-circle text-3xl text-green-400 opacity-50"></i>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Pending Amount</p>
-                        <h3 class="text-2xl font-bold text-orange-400" id="pending-amount">Rs. 0</h3>
-                    </div>
-                    <i class="fas fa-clock text-3xl text-orange-400 opacity-50"></i>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Bookings Table -->
-        <div class="glass-panel rounded-2xl overflow-hidden">
-            <div class="p-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <h2 class="text-xl font-bold text-white">
-                    <i class="fas fa-table-list mr-2"></i> All Bookings
-                </h2>
-                <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
-                        <input type="text" id="search-input" 
-                               placeholder="Search by name or contact..." 
-                               class="glass-input pl-10 pr-4 py-2 rounded-lg text-sm w-full md:w-64">
-                    </div>
-                    <button onclick="loadBookings()" 
-                            class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-bold flex items-center justify-center gap-2 transition-all">
-                        <i class="fas fa-sync-alt"></i> Refresh
+        </aside>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-y-auto relative bg-slate-900/50 w-full">
+            <div class="absolute inset-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+
+            <!-- Mobile Header -->
+            <header class="md:hidden p-4 flex items-center justify-between glass-panel border-b border-white/5 sticky top-0 z-10">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="text-white p-2">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
+                    <span class="font-bold text-lg text-white">Admin Panel</span>
                 </div>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-white/5">
-                        <tr>
-                            <th class="p-4 text-left text-gray-300 text-sm font-semibold">Date</th>
-                            <th class="p-4 text-left text-gray-300 text-sm font-semibold">Customer</th>
-                            <th class="p-4 text-left text-gray-300 text-sm font-semibold">Package</th>
-                            <th class="p-4 text-left text-gray-300 text-sm font-semibold">Amount</th>
-                            <th class="p-4 text-left text-gray-300 text-sm font-semibold">Status</th>
-                            <th class="p-4 text-left text-gray-300 text-sm font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bookings-table" class="divide-y divide-white/5">
-                        <!-- Data will load here -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="no-data" class="hidden p-12 text-center text-gray-500">
-                <i class="fas fa-inbox text-4xl mb-4 opacity-50"></i>
-                <p>No bookings found in the database</p>
-                <p class="text-sm mt-2">Bookings will appear here after customers submit them</p>
-            </div>
-            
-            <div id="loading" class="p-12 text-center">
-                <i class="fas fa-spinner fa-spin text-2xl text-indigo-400 mb-2"></i>
-                <p class="text-gray-400">Loading bookings...</p>
-            </div>
-        </div>
-        
-        <!-- Instructions -->
-        <div class="mt-8 p-6 glass-panel rounded-2xl border border-indigo-500/20">
-            <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                <i class="fas fa-info-circle text-indigo-400"></i> Admin Instructions
-            </h3>
-            <ul class="text-gray-400 space-y-2 text-sm">
-                <li><i class="fas fa-check text-green-400 mr-2"></i> Bookings are automatically saved to Google Sheets</li>
-                <li><i class="fas fa-check text-green-400 mr-2"></i> Click WhatsApp icon to contact customers directly</li>
-                <li><i class="fas fa-check text-green-400 mr-2"></i> Refresh button updates the dashboard with latest data</li>
-                <li><i class="fas fa-check text-green-400 mr-2"></i> To update payment status, edit directly in Google Sheets</li>
-            </ul>
-        </div>
+                <button onclick="syncWithOnline()" class="text-blue-400 hover:text-blue-300">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </header>
+
+            <!-- SECTION: DASHBOARD -->
+            <section id="sec-dashboard" class="p-4 md:p-8 max-w-7xl mx-auto animate-fade-in-up">
+                <div class="flex justify-between items-center mb-6 md:mb-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Overview</h2>
+                    <div class="flex items-center gap-2 text-sm">
+                        <span class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-blue-500"></div> Online</span>
+                        <span class="flex items-center gap-1"><div class="w-3 h-3 rounded-full bg-green-500"></div> Manual</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-10">
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                        <div class="relative z-10">
+                            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold mb-1">Total Orders</p>
+                            <h3 class="text-3xl font-bold text-white" id="dash-total-orders">0</h3>
+                            <p class="text-xs text-gray-500 mt-1" id="dash-source-breakdown">Online: 0 | Manual: 0</p>
+                        </div>
+                        <i class="fas fa-shopping-bag absolute right-4 bottom-4 text-4xl text-blue-500/20 group-hover:scale-110 transition-transform"></i>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                        <div class="relative z-10">
+                            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold mb-1">Total Income</p>
+                            <h3 class="text-3xl font-bold text-emerald-400" id="dash-total-income">Rs. 0</h3>
+                        </div>
+                        <i class="fas fa-wallet absolute right-4 bottom-4 text-4xl text-emerald-500/20 group-hover:scale-110 transition-transform"></i>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                        <div class="relative z-10">
+                            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold mb-1">Cash Collected</p>
+                            <h3 class="text-3xl font-bold text-indigo-400" id="dash-cash-collected">Rs. 0</h3>
+                        </div>
+                        <i class="fas fa-check-circle absolute right-4 bottom-4 text-4xl text-indigo-500/20 group-hover:scale-110 transition-transform"></i>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                        <div class="relative z-10">
+                            <p class="text-gray-400 text-xs uppercase tracking-wider font-semibold mb-1">Pending Cash</p>
+                            <h3 class="text-3xl font-bold text-orange-400" id="dash-pending-cash">Rs. 0</h3>
+                        </div>
+                        <i class="fas fa-hourglass-half absolute right-4 bottom-4 text-4xl text-orange-500/20 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="glass-panel rounded-2xl overflow-hidden p-6">
+                    <h3 class="text-lg font-bold text-white mb-4">Quick Stats</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center p-4 rounded-xl bg-white/5">
+                            <p class="text-2xl font-bold text-white" id="today-bookings">0</p>
+                            <p class="text-xs text-gray-400">Today's Orders</p>
+                        </div>
+                        <div class="text-center p-4 rounded-xl bg-white/5">
+                            <p class="text-2xl font-bold text-green-400" id="paid-orders">0</p>
+                            <p class="text-xs text-gray-400">Paid Orders</p>
+                        </div>
+                        <div class="text-center p-4 rounded-xl bg-white/5">
+                            <p class="text-2xl font-bold text-orange-400" id="unpaid-orders">0</p>
+                            <p class="text-xs text-gray-400">Unpaid Orders</p>
+                        </div>
+                        <div class="text-center p-4 rounded-xl bg-white/5">
+                            <p class="text-2xl font-bold text-blue-400" id="online-orders">0</p>
+                            <p class="text-xs text-gray-400">Online Orders</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: BOOKINGS -->
+            <section id="sec-bookings" class="p-4 md:p-8 max-w-7xl mx-auto hidden animate-fade-in-up">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">Booking Management</h2>
+                    <div class="flex gap-3">
+                        <div class="relative w-full md:w-64">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                            <input type="text" id="search-input" onkeyup="filterBookings()" class="glass-input w-full pl-10 pr-4 py-2 rounded-lg text-sm" placeholder="Search name or number...">
+                        </div>
+                        <button onclick="syncWithOnline()" class="px-4 py-2 bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white rounded-lg border border-blue-500/20 transition-all">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl overflow-hidden border border-white/5">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-white/5 text-gray-400 uppercase text-xs font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">Date & Source</th>
+                                    <th class="px-6 py-4">Customer</th>
+                                    <th class="px-6 py-4">Package</th>
+                                    <th class="px-6 py-4 text-right">Amount</th>
+                                    <th class="px-6 py-4 text-center">Status</th>
+                                    <th class="px-6 py-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookings-table-body" class="divide-y divide-white/5 text-gray-300">
+                                <!-- Data Rows Here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="no-data-msg" class="hidden py-12 text-center text-gray-500">
+                        <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                        <p>No bookings found.</p>
+                        <button onclick="syncWithOnline()" class="mt-4 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white transition-all">
+                            <i class="fas fa-sync-alt mr-2"></i> Sync Online Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-between items-center text-sm text-gray-500">
+                    <div>
+                        <span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-blue-500"></div> Online Booking</span>
+                        <span class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div> Manual Entry</span>
+                    </div>
+                    <div class="text-right">
+                        <p id="booking-count">Total: 0 bookings</p>
+                        <p id="last-sync">Last sync: Never</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: FINANCES -->
+            <section id="sec-finances" class="p-4 md:p-8 max-w-7xl mx-auto hidden animate-fade-in-up">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">Financial Report</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <!-- Profit Split -->
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-indigo-500/20 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-6 flex items-center gap-2">
+                            <i class="fas fa-pie-chart text-indigo-400"></i> Profit Distribution
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-gray-400 text-sm">Total Generated Revenue</span>
+                                    <span class="text-white font-bold" id="fin-total-rev">Rs. 0</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-indigo-500 h-2 rounded-full w-full"></div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4 pt-4">
+                                <div class="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
+                                    <p class="text-[10px] md:text-xs text-emerald-400 uppercase font-bold mb-1">Owner Profit (70%)</p>
+                                    <h4 class="text-xl md:text-2xl font-bold text-white" id="fin-owner-profit">Rs. 0</h4>
+                                </div>
+                                <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20">
+                                    <p class="text-[10px] md:text-xs text-blue-400 uppercase font-bold mb-1">Admin Fee (30%)</p>
+                                    <h4 class="text-xl md:text-2xl font-bold text-white" id="fin-admin-profit">Rs. 0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cash Flow -->
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl">
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-6">Cash Flow Status</h3>
+                        <div class="flex items-center justify-center h-48">
+                             <div class="text-center">
+                                 <p class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400" id="fin-collection-rate">0%</p>
+                                 <p class="text-sm text-gray-400 mt-2">Collection Rate</p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Revenue Breakdown -->
+                <div class="glass-panel p-6 md:p-8 rounded-3xl mt-8">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-6">Revenue Breakdown</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                            <p class="text-xs text-blue-400 uppercase font-bold mb-1">Online Bookings</p>
+                            <h4 class="text-xl font-bold text-white" id="rev-online">Rs. 0</h4>
+                            <p class="text-xs text-gray-400" id="rev-online-count">0 orders</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+                            <p class="text-xs text-green-400 uppercase font-bold mb-1">Manual Entries</p>
+                            <h4 class="text-xl font-bold text-white" id="rev-manual">Rs. 0</h4>
+                            <p class="text-xs text-gray-400" id="rev-manual-count">0 orders</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                            <p class="text-xs text-purple-400 uppercase font-bold mb-1">This Month</p>
+                            <h4 class="text-xl font-bold text-white" id="rev-month">Rs. 0</h4>
+                            <p class="text-xs text-gray-400" id="rev-month-count">0 orders</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: NEW BOOKING -->
+            <section id="sec-new-booking" class="p-4 md:p-8 max-w-3xl mx-auto hidden animate-fade-in-up">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">Manual Booking Entry</h2>
+                
+                <div class="glass-panel p-6 md:p-8 rounded-3xl">
+                    <form id="new-booking-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Customer Name</label>
+                                <input type="text" id="nb-name" class="glass-input w-full px-4 py-3 rounded-xl" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">WhatsApp Number</label>
+                                <input type="tel" id="nb-contact" class="glass-input w-full px-4 py-3 rounded-xl" placeholder="07XXXXXXXX" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Package Name</label>
+                                <select id="nb-package" class="glass-input w-full px-4 py-3 rounded-xl">
+                                    <option value="Basic Package" class="bg-slate-800">Basic Package</option>
+                                    <option value="Standard Package" class="bg-slate-800">Standard Package</option>
+                                    <option value="Premium Pack" class="bg-slate-800">Premium Pack</option>
+                                    <option value="Custom" class="bg-slate-800">Custom</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Total Price (Rs)</label>
+                                <input type="number" id="nb-price" class="glass-input w-full px-4 py-3 rounded-xl" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">Payment Status</label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="nb-status" value="paid" class="text-indigo-600">
+                                    <span class="text-green-400">Paid</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="nb-status" value="unpaid" checked class="text-indigo-600">
+                                    <span class="text-orange-400">Unpaid</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl text-white font-bold text-lg hover:shadow-lg hover:shadow-indigo-500/40 transition-all hover:-translate-y-1">
+                                Create Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- SECTION: SETTINGS -->
+            <section id="sec-settings" class="p-4 md:p-8 max-w-3xl mx-auto hidden animate-fade-in-up">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8">System Settings</h2>
+                
+                <div class="space-y-8">
+                    <!-- Profile -->
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl">
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-6">Admin Profile</h3>
+                        <form id="creds-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">New Username</label>
+                                <input type="text" id="set-user" class="glass-input w-full px-4 py-3 rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">New Password</label>
+                                <input type="password" id="set-pass" class="glass-input w-full px-4 py-3 rounded-xl">
+                            </div>
+                            <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-medium transition-all">
+                                Update Credentials
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- API Settings -->
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-blue-500/20">
+                        <h3 class="text-lg md:text-xl font-bold text-blue-400 mb-2">API Configuration</h3>
+                        <p class="text-gray-400 text-sm mb-6">npoint.io Integration Settings</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">npoint.io JSON URL</label>
+                                <input type="text" id="api-url" value="https://api.npoint.io/5fb2a2af20ca2ed8583e" readonly class="glass-input w-full px-4 py-3 rounded-xl bg-gray-800/50">
+                            </div>
+                            <div class="flex gap-3">
+                                <button onclick="testAPI()" class="px-4 py-2 bg-blue-500/10 hover:bg-blue-500 text-blue-400 hover:text-white rounded-lg border border-blue-500/20 transition-all">
+                                    Test Connection
+                                </button>
+                                <button onclick="exportToNpoint()" class="px-4 py-2 bg-green-500/10 hover:bg-green-500 text-green-400 hover:text-white rounded-lg border border-green-500/20 transition-all">
+                                    Export All Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="glass-panel p-6 md:p-8 rounded-3xl border border-red-500/20">
+                        <h3 class="text-lg md:text-xl font-bold text-red-400 mb-2">Danger Zone</h3>
+                        <p class="text-gray-400 text-sm mb-6">Irreversible actions. Proceed with caution.</p>
+                        
+                        <div class="space-y-3">
+                            <button onclick="clearLocalData()" class="w-full px-6 py-3 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 rounded-xl font-bold transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-trash-alt"></i> CLEAR LOCAL DATA ONLY
+                            </button>
+                            <button onclick="clearAllData()" class="w-full px-6 py-3 bg-red-700/20 hover:bg-red-700 text-red-400 hover:text-white border border-red-700/30 rounded-xl font-bold transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-nuke"></i> ERASE ALL DATA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Google Apps Script URL (same as index.html)
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN9umgcTnk-BVFNhHHzgSyBnqKSGR4T1z_QhI0gELBDnZrZ8Mwki50W1rIWURuT6Vd2A/exec';
-        
-        // Admin credentials
-        const ADMIN_USER = 'admin';
-        const ADMIN_PASS = 'admin123';
-        
-        // Check login on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLogin();
+        // --- Configuration ---
+        const NPONINT_JSON_URL = 'https://api.npoint.io/5127c96473e65fe045e7';
+        let lastSyncTime = null;
+
+        // --- Mobile Menu Toggle ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // --- State Management ---
+        const state = {
+            bookings: [],
+            adminCreds: null,
+            onlineBookings: []
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadFromStorage();
+            checkSession();
+            
+            // Load online bookings if logged in
+            if(sessionStorage.getItem('admin_session') === 'true') {
+                await loadOnlineBookings();
+            }
+
+            // Bind Events
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('new-booking-form').addEventListener('submit', handleNewBooking);
+            document.getElementById('creds-form').addEventListener('submit', handleCredsUpdate);
+            
+            // Update last sync display
+            updateLastSyncDisplay();
         });
-        
-        // Login function
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+
+        // --- 1. Session Guard ---
+        function checkSession() {
+            const isAuth = sessionStorage.getItem('admin_session');
+            const loginView = document.getElementById('login-view');
+            const appView = document.getElementById('app-view');
+
+            if (isAuth === 'true') {
+                loginView.classList.add('hidden');
+                appView.classList.remove('hidden');
+                setTimeout(() => appView.classList.remove('opacity-0'), 50);
+                refreshViews();
+            } else {
+                loginView.classList.remove('hidden');
+                appView.classList.add('hidden');
+                appView.classList.add('opacity-0');
+            }
+        }
+
+        // --- 2. Login Logic ---
+        function handleLogin(e) {
             e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === ADMIN_USER && password === ADMIN_PASS) {
-                localStorage.setItem('mk_admin_logged_in', 'true');
-                showDashboard();
+            const inputUser = document.getElementById('login-user').value.trim();
+            const inputPass = document.getElementById('login-pass').value.trim();
+
+            let validUser = 'admin';
+            let validPass = 'admin123';
+
+            if (state.adminCreds && state.adminCreds.user && state.adminCreds.pass) {
+                validUser = state.adminCreds.user;
+                validPass = state.adminCreds.pass;
+            }
+
+            if (inputUser === validUser && inputPass === validPass) {
+                sessionStorage.setItem('admin_session', 'true');
+                
+                document.getElementById('login-view').style.opacity = '0';
+                setTimeout(async () => {
+                    checkSession(); 
+                    await loadOnlineBookings();
+                    document.getElementById('login-view').style.opacity = '1';
+                }, 300);
+
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Access Denied',
-                    text: 'Invalid username or password',
+                    text: 'Invalid Username or Password',
                     background: '#1e293b',
                     color: '#fff',
                     confirmButtonColor: '#ef4444'
                 });
             }
-        });
-        
-        // Check if already logged in
-        function checkLogin() {
-            if (localStorage.getItem('mk_admin_logged_in') === 'true') {
-                showDashboard();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_session');
+            window.location.reload();
+        }
+
+        // --- Data Layer ---
+        function loadFromStorage() {
+            const storedBookings = localStorage.getItem('bookings');
+            state.bookings = storedBookings ? JSON.parse(storedBookings) : [];
+
+            const storedCreds = localStorage.getItem('admin_creds');
+            if (storedCreds) {
+                state.adminCreds = JSON.parse(storedCreds);
             }
         }
-        
-        // Show dashboard
-        function showDashboard() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            loadBookings();
-        }
-        
-        // Logout
-        function logout() {
-            localStorage.removeItem('mk_admin_logged_in');
-            location.reload();
-        }
-        
-        // Load bookings from Google Sheets
-        async function loadBookings() {
+
+        // --- Load Online Bookings from npoint.io ---
+        async function loadOnlineBookings() {
             try {
-                // Show loading
-                document.getElementById('loading').classList.remove('hidden');
-                document.getElementById('no-data').classList.add('hidden');
+                showLoading('Syncing with online data...');
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL);
-                const bookings = await response.json();
+                const response = await fetch(NPONINT_JSON_URL);
+                if (!response.ok) throw new Error('Failed to fetch online bookings');
                 
-                // Hide loading
-                document.getElementById('loading').classList.add('hidden');
+                const data = await response.json();
+                state.onlineBookings = data.bookings || [];
                 
-                if (!Array.isArray(bookings)) {
-                    throw new Error('Invalid data format received from server');
-                }
+                // Merge with local bookings (avoid duplicates by ID)
+                const allBookings = [...state.bookings];
+                const existingIds = new Set(state.bookings.map(b => b.id));
                 
-                updateStats(bookings);
-                renderBookingsTable(bookings);
+                state.onlineBookings.forEach(online => {
+                    if (!existingIds.has(online.id)) {
+                        // Add source marker
+                        online.source = 'online';
+                        allBookings.push(online);
+                    }
+                });
+                
+                state.bookings = allBookings;
+                lastSyncTime = new Date();
+                updateLastSyncDisplay();
+                
+                // Save merged data locally
+                localStorage.setItem('bookings', JSON.stringify(state.bookings));
+                
+                refreshViews();
+                
+                hideLoading();
+                Swal.fire({
+                    title: 'Success!',
+                    text: `Loaded ${state.onlineBookings.length} online bookings`,
+                    icon: 'success',
+                    timer: 1500,
+                    background: '#1e293b',
+                    color: '#fff'
+                });
                 
             } catch (error) {
-                console.error('Error loading bookings:', error);
-                document.getElementById('loading').classList.add('hidden');
-                
+                console.error('Error loading online bookings:', error);
+                hideLoading();
                 Swal.fire({
+                    title: 'Sync Failed',
+                    text: 'Could not connect to online data',
                     icon: 'error',
-                    title: 'Connection Error',
-                    html: `
-                        <div class="text-left">
-                            <p class="mb-2">Unable to load bookings from Google Sheets.</p>
-                            <p class="text-sm text-gray-400 mb-3">Possible reasons:</p>
-                            <ul class="text-sm text-gray-400 list-disc pl-4">
-                                <li>No internet connection</li>
-                                <li>Google Sheets not published correctly</li>
-                                <li>No bookings in the database yet</li>
-                            </ul>
-                            <p class="mt-3 text-sm">Bookings are still being saved when customers submit them.</p>
-                        </div>
-                    `,
                     background: '#1e293b',
-                    color: '#fff',
-                    width: 500
+                    color: '#fff'
                 });
-                
-                document.getElementById('no-data').classList.remove('hidden');
             }
         }
-        
-        // Update statistics
-        function updateStats(bookings) {
-            if (!Array.isArray(bookings)) return;
-            
-            const totalOrders = bookings.length;
-            const totalRevenue = bookings.reduce((sum, booking) => {
-                return sum + (parseFloat(booking.total) || 0);
-            }, 0);
-            
-            // Check for different field names (Google Sheets might use different casing)
-            const paidBookings = bookings.filter(b => {
-                const status = b.status || b.paymentstatus || b.payment_status || 'Unpaid';
-                return status.toString().toLowerCase() === 'paid';
-            });
-            
-            const paidAmount = paidBookings.reduce((sum, booking) => {
-                return sum + (parseFloat(booking.total) || 0);
-            }, 0);
-            
-            const pendingAmount = totalRevenue - paidAmount;
-            
-            document.getElementById('total-orders').textContent = totalOrders;
-            document.getElementById('total-revenue').textContent = 'Rs. ' + totalRevenue.toLocaleString();
-            document.getElementById('paid-amount').textContent = 'Rs. ' + paidAmount.toLocaleString();
-            document.getElementById('pending-amount').textContent = 'Rs. ' + pendingAmount.toLocaleString();
+
+        function syncAndRefresh(updatedList) {
+            localStorage.setItem('bookings', JSON.stringify(updatedList));
+            state.bookings = updatedList;
+            refreshViews();
         }
-        
-        // Render bookings table
-        function renderBookingsTable(bookings) {
-            const tbody = document.getElementById('bookings-table');
-            const noData = document.getElementById('no-data');
+
+        function refreshViews() {
+            if(!sessionStorage.getItem('admin_session')) return;
+            renderDashboard();
+            renderBookingsTable();
+            renderFinances();
+        }
+
+        // --- Navigation ---
+        window.showSection = function(id, el) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
             
-            if (!Array.isArray(bookings) || bookings.length === 0) {
-                tbody.innerHTML = '';
-                noData.classList.remove('hidden');
-                return;
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
             }
+        }
+
+        // --- Dashboard Logic ---
+        function renderDashboard() {
+            const total = state.bookings.length;
+            const income = state.bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+            const paid = state.bookings
+                .filter(b => b.paymentStatus === 'paid')
+                .reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
             
-            noData.classList.add('hidden');
+            // Source breakdown
+            const onlineCount = state.bookings.filter(b => b.source === 'online').length;
+            const manualCount = state.bookings.filter(b => b.source !== 'online').length;
             
-            // Sort by date (newest first)
-            bookings.sort((a, b) => {
-                const dateA = a.date || a.created || '';
-                const dateB = b.date || b.created || '';
-                return new Date(dateB) - new Date(dateA);
-            });
+            // Today's bookings
+            const today = new Date().toISOString().split('T')[0];
+            const todayBookings = state.bookings.filter(b => b.date === today).length;
             
-            let html = '';
-            bookings.forEach(booking => {
-                // Handle different field name variations
-                const id = booking.id || '';
-                const packageName = booking.package || 'Not specified';
-                const date = booking.date || 'N/A';
-                const time = booking.time || '';
-                const name = booking.name || 'No name';
-                const contact = booking.contact || 'No contact';
-                const status = booking.status || booking.paymentstatus || booking.payment_status || 'Unpaid';
-                const total = parseFloat(booking.total) || 0;
+            // Status counts
+            const paidCount = state.bookings.filter(b => b.paymentStatus === 'paid').length;
+            const unpaidCount = state.bookings.filter(b => b.paymentStatus === 'unpaid').length;
+            
+            // Update DOM
+            document.getElementById('dash-total-orders').textContent = total;
+            document.getElementById('dash-total-income').textContent = `Rs. ${income.toLocaleString()}`;
+            document.getElementById('dash-cash-collected').textContent = `Rs. ${paid.toLocaleString()}`;
+            document.getElementById('dash-pending-cash').textContent = `Rs. ${(income - paid).toLocaleString()}`;
+            document.getElementById('dash-source-breakdown').textContent = `Online: ${onlineCount} | Manual: ${manualCount}`;
+            
+            document.getElementById('today-bookings').textContent = todayBookings;
+            document.getElementById('paid-orders').textContent = paidCount;
+            document.getElementById('unpaid-orders').textContent = unpaidCount;
+            document.getElementById('online-orders').textContent = onlineCount;
+            
+            // Update booking count
+            document.getElementById('booking-count').textContent = `Total: ${total} bookings (${onlineCount} online, ${manualCount} manual)`;
+        }
+
+        // --- Bookings Logic ---
+        function renderBookingsTable(filterText = '') {
+            const tbody = document.getElementById('bookings-table-body');
+            tbody.innerHTML = '';
+            
+            const filtered = state.bookings.filter(b => 
+                (b.name && b.name.toLowerCase().includes(filterText.toLowerCase())) || 
+                (b.contact && b.contact.includes(filterText))
+            ).sort((a,b) => new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date));
+
+            if(filtered.length === 0) {
+                document.getElementById('no-data-msg').classList.remove('hidden');
+            } else {
+                document.getElementById('no-data-msg').classList.add('hidden');
                 
-                const isPaid = status.toString().toLowerCase() === 'paid';
-                
-                html += `
-                    <tr class="hover:bg-white/5 transition-colors">
-                        <td class="p-4">
-                            <div class="text-white font-medium">${date}</div>
-                            <div class="text-xs text-gray-400">${time}</div>
-                        </td>
-                        <td class="p-4">
-                            <div class="text-white font-medium">${name}</div>
-                            <div class="text-xs text-gray-400">${contact}</div>
-                        </td>
-                        <td class="p-4">
-                            <div class="text-indigo-300 font-medium">${packageName}</div>
-                        </td>
-                        <td class="p-4">
-                            <div class="text-white font-bold">Rs. ${total.toLocaleString()}</div>
-                        </td>
-                        <td class="p-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold ${isPaid ? 'bg-green-500/20 text-green-400 border border-green-500/20' : 'bg-orange-500/20 text-orange-400 border border-orange-500/20'}">
-                                ${isPaid ? 'Paid' : 'Unpaid'}
+                filtered.forEach(b => {
+                    const isPaid = b.paymentStatus === 'paid';
+                    const isOnline = b.source === 'online';
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-white/5 transition-colors';
+                    
+                    // Format date display
+                    const dateDisplay = b.date || 'N/A';
+                    const timeDisplay = b.time || '';
+                    
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 text-gray-400">
+                            <div class="font-medium">${dateDisplay}</div>
+                            <div class="text-xs opacity-50">${timeDisplay}</div>
+                            <span class="${isOnline ? 'online-badge' : 'manual-badge'}">
+                                ${isOnline ? 'Online' : 'Manual'}
                             </span>
                         </td>
-                        <td class="p-4">
-                            <div class="flex items-center gap-2">
-                                <a href="https://wa.me/94${contact.toString().replace(/^0/, '')}" 
-                                   target="_blank"
-                                   class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white flex items-center justify-center transition-all"
-                                   title="Contact via WhatsApp">
+                        <td class="px-6 py-4">
+                            <div class="text-white font-medium">${b.name || 'N/A'}</div>
+                            <div class="text-xs text-gray-500">${b.contact || 'N/A'}</div>
+                        </td>
+                        <td class="px-6 py-4 text-indigo-300 font-medium">${b.package || b.package_name || 'N/A'}</td>
+                        <td class="px-6 py-4 text-right font-bold text-white">Rs. ${parseFloat(b.total || 0).toLocaleString()}</td>
+                        <td class="px-6 py-4 text-center">
+                            <button onclick="togglePaymentStatus(${b.id})" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${isPaid ? 'bg-green-500/20 text-green-400 border-green-500/20 hover:bg-green-500/30' : 'bg-orange-500/20 text-orange-400 border-orange-500/20 hover:bg-orange-500/30'}">
+                                ${isPaid ? 'Paid' : 'Unpaid'}
+                            </button>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                ${b.contact ? `
+                                <a href="https://wa.me/94${b.contact.replace(/^0/,'')}" target="_blank" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500 hover:text-white flex items-center justify-center transition-all">
                                     <i class="fab fa-whatsapp"></i>
                                 </a>
-                                <a href="https://docs.google.com/spreadsheets/d/1l57SfMsFO2hQslCLG5QGSkUfpp64z_ln-iD-tHmsMpQ/edit" 
-                                   target="_blank"
-                                   class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all"
-                                   title="Edit in Google Sheets">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                ` : ''}
+                                <button onclick="deleteBooking(${b.id})" class="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             </div>
                         </td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html;
-            
-            // Add search functionality
-            document.getElementById('search-input').addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const filtered = bookings.filter(booking => {
-                    const name = (booking.name || '').toLowerCase();
-                    const contact = (booking.contact || '').toLowerCase();
-                    const packageName = (booking.package || '').toLowerCase();
-                    
-                    return name.includes(searchTerm) || 
-                           contact.includes(searchTerm) || 
-                           packageName.includes(searchTerm);
+                    `;
+                    tbody.appendChild(tr);
                 });
-                renderBookingsTable(filtered);
+            }
+        }
+
+        window.filterBookings = function() {
+            const text = document.getElementById('search-input').value;
+            renderBookingsTable(text);
+        }
+
+        window.togglePaymentStatus = function(id) {
+            const currentBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            const booking = currentBookings.find(b => b.id === id);
+            if(booking) {
+                booking.paymentStatus = booking.paymentStatus === 'paid' ? 'unpaid' : 'paid';
+                syncAndRefresh(currentBookings);
+            }
+        }
+
+        window.deleteBooking = function(id) {
+            Swal.fire({
+                title: 'Delete Order?',
+                text: "You won't be able to recover this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                background: '#1e293b',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const currentBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+                    const updatedList = currentBookings.filter(b => b.id !== id);
+                    syncAndRefresh(updatedList);
+                    
+                    Swal.fire({
+                        title: 'Deleted!',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
+                }
+            })
+        }
+
+        // --- Finances Logic ---
+        function renderFinances() {
+            const income = state.bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+            
+            const adminShare = income * 0.30;
+            const ownerShare = income * 0.70;
+
+            // Source breakdown
+            const onlineBookings = state.bookings.filter(b => b.source === 'online');
+            const manualBookings = state.bookings.filter(b => b.source !== 'online');
+            
+            const onlineIncome = onlineBookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+            const manualIncome = manualBookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+            
+            // Monthly breakdown
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const monthlyBookings = state.bookings.filter(b => {
+                if (!b.date) return false;
+                const bookingDate = new Date(b.date);
+                return bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear;
+            });
+            const monthlyIncome = monthlyBookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0);
+
+            document.getElementById('fin-total-rev').textContent = `Rs. ${income.toLocaleString()}`;
+            document.getElementById('fin-admin-profit').textContent = `Rs. ${adminShare.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+            document.getElementById('fin-owner-profit').textContent = `Rs. ${ownerShare.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+
+            const paidCount = state.bookings.filter(b => b.paymentStatus === 'paid').length;
+            const totalCount = state.bookings.length;
+            const rate = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
+            document.getElementById('fin-collection-rate').textContent = `${rate}%`;
+            
+            // Update breakdown
+            document.getElementById('rev-online').textContent = `Rs. ${onlineIncome.toLocaleString()}`;
+            document.getElementById('rev-online-count').textContent = `${onlineBookings.length} orders`;
+            
+            document.getElementById('rev-manual').textContent = `Rs. ${manualIncome.toLocaleString()}`;
+            document.getElementById('rev-manual-count').textContent = `${manualBookings.length} orders`;
+            
+            document.getElementById('rev-month').textContent = `Rs. ${monthlyIncome.toLocaleString()}`;
+            document.getElementById('rev-month-count').textContent = `${monthlyBookings.length} orders`;
+        }
+
+        // --- New Booking Logic ---
+        function handleNewBooking(e) {
+            e.preventDefault();
+            
+            const newEntry = {
+                id: Date.now(),
+                name: document.getElementById('nb-name').value,
+                contact: document.getElementById('nb-contact').value,
+                package: document.getElementById('nb-package').value,
+                total: parseFloat(document.getElementById('nb-price').value),
+                date: new Date().toISOString().split('T')[0],
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                paymentStatus: document.querySelector('input[name="nb-status"]:checked').value,
+                source: 'manual',
+                timestamp: new Date().toISOString()
+            };
+
+            const latestBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            latestBookings.push(newEntry);
+            syncAndRefresh(latestBookings);
+            
+            e.target.reset();
+            
+            Swal.fire({
+                title: 'Booking Added!',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false,
+                background: '#1e293b',
+                color: '#fff'
+            }).then(() => {
+                showSection('sec-bookings');
             });
         }
-        
-        // Auto-refresh every 30 seconds
-        setInterval(() => {
-            if (localStorage.getItem('mk_admin_logged_in') === 'true') {
-                loadBookings();
+
+        // --- Settings Logic ---
+        function handleCredsUpdate(e) {
+            e.preventDefault();
+            const u = document.getElementById('set-user').value.trim();
+            const p = document.getElementById('set-pass').value.trim();
+            
+            if(u && p) {
+                state.adminCreds = { user: u, pass: p };
+                localStorage.setItem('admin_creds', JSON.stringify(state.adminCreds));
+                Swal.fire({
+                    title: 'Updated!',
+                    text: 'Please login with new credentials.',
+                    icon: 'success',
+                    background: '#1e293b',
+                    color: '#fff'
+                }).then(() => logout());
             }
-        }, 30000);
+        }
+
+        // --- Online Sync Functions ---
+        window.syncWithOnline = async function() {
+            await loadOnlineBookings();
+        }
+
+        async function testAPI() {
+            try {
+                showLoading('Testing API connection...');
+                const response = await fetch(NPONINT_JSON_URL);
+                
+                if (!response.ok) throw new Error('API test failed');
+                
+                const data = await response.json();
+                hideLoading();
+                
+                Swal.fire({
+                    title: 'API Test Successful!',
+                    html: `Connection established successfully.<br>
+                           <div class="mt-4 p-3 bg-white/5 rounded-lg text-left">
+                           <p class="text-sm">Bookings in database: ${data.bookings?.length || 0}</p>
+                           <p class="text-sm">Last updated: ${data.lastUpdated || 'Unknown'}</p>
+                           </div>`,
+                    icon: 'success',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+                
+            } catch (error) {
+                hideLoading();
+                Swal.fire({
+                    title: 'API Test Failed',
+                    text: 'Could not connect to npoint.io',
+                    icon: 'error',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+            }
+        }
+
+        async function exportToNpoint() {
+            try {
+                showLoading('Exporting data to npoint.io...');
+                
+                // Note: npoint.io doesn't support direct PUT from frontend
+                // This would require a backend server
+                // For now, we'll just show the data structure
+                
+                const exportData = {
+                    bookings: state.bookings,
+                    lastUpdated: new Date().toISOString(),
+                    totalBookings: state.bookings.length,
+                    totalRevenue: state.bookings.reduce((sum, b) => sum + (parseFloat(b.total) || 0), 0)
+                };
+                
+                hideLoading();
+                
+                Swal.fire({
+                    title: 'Export Ready',
+                    html: `Data export prepared.<br>
+                           <div class="mt-4 p-3 bg-white/5 rounded-lg text-left">
+                           <p class="text-sm">Total bookings: ${exportData.totalBookings}</p>
+                           <p class="text-sm">Total revenue: Rs. ${exportData.totalRevenue.toLocaleString()}</p>
+                           <p class="text-xs text-gray-400 mt-2">Copy this JSON to update npoint.io manually:</p>
+                           <textarea class="w-full mt-2 p-2 bg-black/30 text-xs rounded border border-white/10" rows="4" readonly>${JSON.stringify(exportData, null, 2)}</textarea>
+                           </div>`,
+                    icon: 'info',
+                    confirmButtonText: 'Copy JSON',
+                    showCancelButton: true,
+                    background: '#1e293b',
+                    color: '#fff'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigator.clipboard.writeText(JSON.stringify(exportData, null, 2));
+                        Swal.fire({
+                            title: 'Copied!',
+                            text: 'JSON copied to clipboard',
+                            icon: 'success',
+                            timer: 1500,
+                            background: '#1e293b',
+                            color: '#fff'
+                        });
+                    }
+                });
+                
+            } catch (error) {
+                hideLoading();
+                Swal.fire({
+                    title: 'Export Failed',
+                    text: error.message,
+                    icon: 'error',
+                    background: '#1e293b',
+                    color: '#fff'
+                });
+            }
+        }
+
+        function updateLastSyncDisplay() {
+            const element = document.getElementById('last-sync');
+            if (lastSyncTime) {
+                const timeAgo = Math.floor((new Date() - lastSyncTime) / 1000 / 60);
+                if (timeAgo < 1) {
+                    element.textContent = 'Last sync: Just now';
+                } else if (timeAgo < 60) {
+                    element.textContent = `Last sync: ${timeAgo} min ago`;
+                } else {
+                    const hours = Math.floor(timeAgo / 60);
+                    element.textContent = `Last sync: ${hours} hour${hours > 1 ? 's' : ''} ago`;
+                }
+            } else {
+                element.textContent = 'Last sync: Never';
+            }
+        }
+
+        // --- Data Management ---
+        window.clearLocalData = function() {
+            Swal.fire({
+                title: 'Clear Local Data?',
+                text: "This will delete local bookings but keep online data.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, clear local',
+                background: '#1e293b',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    state.bookings = state.onlineBookings; // Keep only online data
+                    syncAndRefresh(state.onlineBookings);
+                    Swal.fire({
+                        title: 'Local Data Cleared!',
+                        text: 'Only online bookings remain',
+                        icon: 'success',
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
+                }
+            })
+        }
+
+        window.clearAllData = function() {
+            Swal.fire({
+                title: 'ERASE ALL DATA?',
+                html: "This will delete ALL bookings permanently!<br><small>This does not affect npoint.io data</small>",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, DELETE ALL',
+                cancelButtonText: 'Cancel',
+                background: '#1e293b',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    state.bookings = [];
+                    state.onlineBookings = [];
+                    syncAndRefresh([]);
+                    Swal.fire({
+                        title: 'Reset Complete',
+                        text: 'All data has been erased',
+                        icon: 'success',
+                        background: '#1e293b',
+                        color: '#fff'
+                    });
+                }
+            })
+        }
+
+        // --- Utility Functions ---
+        function showLoading(message = 'Loading...') {
+            Swal.fire({
+                title: message,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                },
+                background: '#1e293b',
+                color: '#fff'
+            });
+        }
+
+        function hideLoading() {
+            Swal.close();
+        }
+
     </script>
 </body>
 </html>
